@@ -4,6 +4,10 @@ function UIElement ()
 }
 
 UIElement.prototype = $.extend(new DependencyObject(), {
+    addEventListener: function (eventName, callback) {
+	    console.log ("XXX addEventListener needs implementing");
+    },
+
     disconnectHost: function () {
 	    this.host = null;
 
@@ -48,9 +52,11 @@ UIElement.prototype = $.extend(new DependencyObject(), {
 
 DependencyProperties.register (UIElement, "IsHitTestVisible",
 			       { defaultValue: true });
-DependencyProperties.register (UIElement, "OpacityMask");
+DependencyProperties.register (UIElement, "OpacityMask",
+			       { affectsRender: true });
 DependencyProperties.register (UIElement, "Opacity",
-			       { defaultValue: 1.0 });
+			       { defaultValue: 1.0,
+				 affectsRender: true });
 DependencyProperties.register (UIElement, "Tag");
 DependencyProperties.register (UIElement, "Triggers",
 			       { defaultValue: function () { return new TriggerCollection(); } });
