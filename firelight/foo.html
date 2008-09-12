@@ -30,31 +30,23 @@
 <!-- our host -->
 <script type="text/javascript" src="htmlcanvas.js"></script>
 
-<canvas id="canvas" width="500" height="500" />
+<canvas id="canvas" width="500" height="500"></canvas>
 
 <script type="text/javascript">
-  var host = new HtmlCanvasHost ($("canvas")[0]);
+$(document).ready(function() {
+  var host = new HtmlCanvasHost ();
 
-  var canvas = new Canvas ();
+  var top = new Canvas ();
 
-  canvas.width = 500;
-  canvas.height = 500;
+  top.width = 800;
+  top.height = 500;
 
-  var rect = new Rectangle();
+  top.background = new SolidColorBrush("#0000ff");
 
-  Canvas.setLeft (rect, 100);
-  Canvas.setTop (rect, 100);
+  top.addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
 
-  rect.width = 200;
-  rect.height = 200;
-  rect.radiusX = 5;
-  rect.radiusY = 5;
-
-  rect.fill = new SolidColorBrush ("#ffffff");
-
-//  rect.addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
-
-  canvas.children.addItem (rect);
-
-  host.setRootVisual (canvas);
+  host.setCanvas ($("canvas")[0]);
+  host.setRootVisual (top);
+  host.render ();
+});
 </script>
