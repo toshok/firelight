@@ -45,6 +45,16 @@ Canvas.prototype = $.extend(new Panel(), {
 	    return result;
 	},
 
+	visit: function (visitor) {
+	    if (this.background) {
+		this.background.visit (visitor);
+		visitor.visitCanvas (this);
+	    }
+	    var children = this.children;
+	    for (var i = 0; i < children.count; i ++)
+		children.getItemAt (i).visit (visitor);
+	},
+
     toString: function () {
 	    return "Canvas";
     },
