@@ -60,3 +60,5 @@ DependencyProperties.register (UIElement, "Opacity",
 DependencyProperties.register (UIElement, "Tag");
 DependencyProperties.register (UIElement, "Triggers",
 			       { defaultValue: function () { return new TriggerCollection(); } });
+
+Types.registerType ("System.Windows", UIElement);

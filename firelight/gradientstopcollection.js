@@ -9,3 +9,4 @@ GradientStopCollection.prototype = $.extend(new Collection(), {
     },
 });
 
+Types.registerType ("System.Windows.Media", GradientStopCollection);

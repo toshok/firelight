@@ -13,3 +13,5 @@ SolidColorBrush.prototype = $.extend(new Brush(), {
 });
 
 DependencyProperties.register (SolidColorBrush, "Color");
+
+Types.registerType ("System.Windows.Media", SolidColorBrush);

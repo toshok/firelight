@@ -71,3 +71,8 @@ DependencyObject.prototype = $.extend (new Object(), {
 	    return "DependencyObject";
     },
 });
+
+DependencyProperties.register (DependencyObject, "Name");
+
+Types.registerType ("System.Windows", DependencyObject);
+

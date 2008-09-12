@@ -13,3 +13,5 @@ LinearGradientBrush.prototype = $.extend(new GradientBrush(), {
 
 DependencyProperties.register (LinearGradientBrush, "StartPoint");
 DependencyProperties.register (LinearGradientBrush, "EndPoint");
+
+Types.registerType ("System.Windows.Media", LinearGradientBrush);

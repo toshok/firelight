@@ -14,3 +14,5 @@ DependencyProperties.register (GradientStop, "Color",
 
 DependencyProperties.register (GradientStop, "Offset",
 			       { defaultValue: "0%" });
+
+Types.registerType ("System.Windows.Media", GradientStop);

@@ -30,3 +30,5 @@ DependencyProperties.register (Panel, "Children",
 			       { defaultValue: function () { return new UIElementCollection(); },
 				 readOnly: true });
 DependencyProperties.register (Panel, "Background");
+
+Types.registerType ("System.Windows.Controls", Panel);

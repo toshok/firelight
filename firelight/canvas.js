@@ -46,13 +46,20 @@ Canvas.prototype = $.extend(new Panel(), {
 	},
 
 	visit: function (visitor) {
+	    if (visitor.beginVisitCanvas)
+		visitor.beginVisitCanvas (this)
+
 	    if (this.background) {
 		this.background.visit (visitor);
 		visitor.visitCanvas (this);
 	    }
+
 	    var children = this.children;
 	    for (var i = 0; i < children.count; i ++)
 		children.getItemAt (i).visit (visitor);
+
+	    if (visitor.endVisitCanvas)
+		visitor.endVisitCanvas (this)
 	},
 
     toString: function () {
@@ -70,3 +77,5 @@ DependencyProperties.registerAttached (Canvas, "Top",
 DependencyProperties.registerAttached (Canvas, "ZIndex",
 				       { defaultValue: 0,
 					 affectsRender: true });
+
+Types.registerType ("System.Windows.Controls", Canvas);

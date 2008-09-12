@@ -5,3 +5,5 @@ function Brush ()
 
 Brush.prototype = $.extend(new DependencyObject(), {
 });
+
+Types.registerType ("System.Windows.Media", Brush);
