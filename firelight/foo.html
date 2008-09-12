@@ -1,0 +1,58 @@
+<script type="text/javascript" src="jquery-1.2.6.js"></script>
+
+<!-- infrastructure -->
+<script type="text/javascript" src="dependencyproperty.js"></script>
+<script type="text/javascript" src="dependencyobject.js"></script>
+<script type="text/javascript" src="uielement.js"></script>
+<script type="text/javascript" src="frameworkelement.js"></script>
+
+<!-- misc types -->
+<script type="text/javascript" src="rect.js"></script>
+<script type="text/javascript" src="size.js"></script>
+
+<!-- controls -->
+<script type="text/javascript" src="panel.js"></script>
+<script type="text/javascript" src="canvas.js"></script>
+
+<!-- collections -->
+<script type="text/javascript" src="collection.js"></script>
+<script type="text/javascript" src="triggercollection.js"></script>
+<script type="text/javascript" src="uielementcollection.js"></script>
+
+<!-- brushes -->
+<script type="text/javascript" src="brush.js"></script>
+<script type="text/javascript" src="solidcolorbrush.js"></script>
+
+<!-- shapes -->
+<script type="text/javascript" src="shape.js"></script>
+<script type="text/javascript" src="rectangle.js"></script>
+
+<!-- our host -->
+<script type="text/javascript" src="htmlcanvas.js"></script>
+
+<canvas id="canvas" width="500" height="500" />
+
+<script type="text/javascript">
+  var host = new HtmlCanvasHost ($("canvas")[0]);
+
+  var canvas = new Canvas ();
+
+  canvas.width = 500;
+  canvas.height = 500;
+
+  var rect = new Rectangle();
+
+  Canvas.setLeft (rect, 100);
+  Canvas.setTop (rect, 100);
+
+  rect.width = 200;
+  rect.height = 200;
+  rect.radiusX = 5;
+  rect.radiusY = 5;
+
+  rect.fill = new SolidColorBrush ("#ffffff");
+
+  canvas.children.add (rect);
+
+  host.rootVisual = canvas;
+</script>
