@@ -1,11 +1,12 @@
 <?xml version='1.0'?>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:svg="http://www.w3.org/2000/svg">
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:xaml="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
   <head>
     <title>firelight</title>
     <script type="text/javascript" src="jquery-1.2.6.js" />
-
-    <script type="text/javascript" src="firelight.js" />
 
     <!-- infrastructure -->
     <script type="text/javascript" src="xamlreader.js" />
@@ -46,19 +47,14 @@
       <![CDATA[
 	$(document).ready(function() {
 	  var host = new SvgHost ();
-          host.setDOMElement (document.getElementById("svg-host")); // jquery doesn't seem to work here
 
-	  XamlReader.loadFromUrl ("test.xaml",
-                                  function (root) {
+	  var root = XamlReader.loadFromNode (document.getElementById("xamlRoot"));
 
-alert ("made it here");
+	  host.findName("canvas").addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
 
-//                                      host.findName("canvas").addEventListener ("MouseLeftButtonDown",
-//                                                                                function(sender, args) { alert ("button down!"); });
-
-                                      host.setRootVisual (root);
-                                      host.render ();
-                                  });
+	  host.setDOMElement (document.getElementById("svg-host")); // jquery doesn't seem to work here
+	  host.setRootVisual (root);
+	  host.render ();
 	});
       ]]>
     </script>
@@ -71,6 +67,16 @@ alert ("made it here");
 	     version="1.1"
 	     xmlns:xlink="http://www.w3.org/1999/xlink">
     </svg:svg>
+
+    <xaml:Canvas id="xamlRoot" x:Name="canvas" Width="800" Height="500">
+    <xaml:Canvas.Fill>
+      <xaml:LinearGradientBrush>
+          <xaml:GradientStop Offset="0" Color="red" />
+	  <xaml:GradientStop Offset="1" Color="blue" />
+      </xaml:LinearGradientBrush>
+    </xaml:Canvas.Fill>
+    </xaml:Canvas>
+
 
   </body>
 </html>

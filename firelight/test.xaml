@@ -1,0 +1,11 @@
+<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="System.Windows.Controls.Canvas"
+	x:Name="canvas" Width="800" Height="500">
+<Canvas.Fill>
+  <LinearGradientBrush>
+    <GradientStop Offset="0" Color="red" />
+    <GradientStop Offset="1" Color="blue" />
+  </LinearGradientBrush>
+</Canvas.Fill>
+</Canvas>
