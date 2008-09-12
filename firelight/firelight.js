@@ -7,7 +7,7 @@ if (typeof (window.console) == "undefined") {
     window.console = console;
 }
 
-function () {
+var v = function () {
     function bar () { }
     if ("name" in bar)
 	return;
@@ -112,5 +112,5 @@ var XamlTypeResolver = new XamlTypeResolverCtor();
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows");
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Controls");
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media");
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Animation");
+XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media.Animation");
 // XXX more here I'm sure
