@@ -65,3 +65,5 @@ Collection.prototype = $.extend(new DependencyObject(), {
 DependencyProperties.register (Collection, "Count",
 			       { defaultValue: 0,
 				 readOnly: true });
+
+Types.registerType ("System.Windows", Collection);
