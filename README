@@ -1,0 +1,3 @@
+Firelight:  a silverlight/moonlight-like system, completely written in Javascript.
+            It will use <video> elements for video playback, and supports rendering
+            to <canvas> elements, as well as creation of an SVG hierarchy.
