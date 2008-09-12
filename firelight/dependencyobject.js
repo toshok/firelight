@@ -1,6 +1,7 @@
 function DependencyObject ()
 {
     this.propertychange_listeners = {};
+    this.properties = {};
 }
 
 DependencyObject.prototype = $.extend (new Object(), {
@@ -9,8 +10,8 @@ DependencyObject.prototype = $.extend (new Object(), {
 	if (typeof new_value == "undefined") throw "you must pass a value to setValue";
 
 	//if (dp.readonly) throw new "Attempting to set a value on read-only property '" + dp.name + "'";
-	var old_value = this[dp.key];
-	this[dp.key] = new_value;
+	var old_value = this.properties[dp.key];
+	this.properties[dp.key] = new_value;
 
 	if (old_value != new_value) {
 	    var args = { "property" : dp,
@@ -25,18 +26,18 @@ DependencyObject.prototype = $.extend (new Object(), {
     },
 
     getValue: function (dp) {
-	if (!(dp.key in this)) {
+	if (!(dp.key in this.properties)) {
 	    if (dp.metadata) {
 		if (typeof (dp.metadata.defaultValue) == "undefined")
-		    this[dp.key] = null;
+		    this.properties[dp.key] = null;
 		else
-		    this[dp.key] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
+		    this.properties[dp.key] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
 	    }
 	    else
-		dp[dp.key] = null;
+		this.properties[dp.key] = null;
 	}
 
-	return this[dp.key];
+	return this.properties[dp.key];
     },
 
     addPropertyChangeListener: function (dp, cb) {

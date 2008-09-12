@@ -1,34 +1,43 @@
 function Canvas ()
 {
+    Panel.apply (this, arguments);
 }
 
 Canvas.prototype = $.extend(new Panel(), {
 
-	measureOverride: function (available) {
-	    var result = this.prototype.measureOverride (availableSize);
+	measureOverride: function (availableSize) {
+	    console.log ("in Canvas.measureOverride");
+	    var result = this.__proto__.__proto__.measureOverride (availableSize);
 
 	    // XXX ugly hack to maintain compat
-	    if (!this.getVisualParent ())
+	    if (!this.getVisualParent () && this.host.rootVisual != this) {
+		console.log ("returning early");
 		return result;
+	    }
 
-	    var children = this.Children;
-	    for (var i = 0; i < children.Count; i ++)
-		children.getValueAt (i).measure (new Size (Infinity, Infinity));
+	    var children = this.children;
+	    for (var i = 0; i < children.count; i ++) {
+		var child = children.getItemAt (i);
+		child.measure (new Size (Infinity, Infinity));
+	    }
 
 	    return result;
 	},
 
 	arrangeOverride: function (finalSize) {
-	    var result = this.prototype.arrangeOverride (finalSizez);
+	    console.log ("in Canvas.arrangeOverride");
+	    var result = this.__proto__.__proto__.arrangeOverride (finalSize);
 
 	    // XXX ugly hack to maintain compat
-	    if (!this.getVisualParent ())
+	    if (!this.getVisualParent () && this.host.rootVisual != this) {
+		console.log ("returning early");
 		return result;
+	    }
 
-	    var children = this.Children;
-	    for (var i = 0; i < children.Count; i ++) {
-		var child = children.getValueAt (i);
-		child.arrange (new Rect (Canvas.GetLeft (child), Canvas.GetTop(child),
+	    var children = this.children;
+	    for (var i = 0; i < children.count; i ++) {
+		var child = children.getItemAt (i);
+		child.arrange (new Rect (Canvas.getLeft (child), Canvas.getTop(child),
 					 Infinity, Infinity));
 		// XXX fill layout slot?
 	    }

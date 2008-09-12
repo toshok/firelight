@@ -38,7 +38,7 @@ var DependencyProperties = {
 	prop.ownerType.__defineSetter__ (prop.name + "Property", function (val) { throw "You can't overwrite a registered DependencyProperty"; });
 
 	if (prop.attached) {
-	    prop.ownerType["get" + prop.name] = function () { return obj.getValue (prop) };
+	    prop.ownerType["get" + prop.name] = function (obj) { return obj.getValue (prop) };
 	    if (!prop.metadata || !prop.metadata.readOnly)
 		prop.ownerType["set" + prop.name] = function (obj, v) { obj.setValue (prop, v); };
 	}

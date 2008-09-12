@@ -10,10 +10,6 @@
 <script type="text/javascript" src="rect.js"></script>
 <script type="text/javascript" src="size.js"></script>
 
-<!-- controls -->
-<script type="text/javascript" src="panel.js"></script>
-<script type="text/javascript" src="canvas.js"></script>
-
 <!-- collections -->
 <script type="text/javascript" src="collection.js"></script>
 <script type="text/javascript" src="triggercollection.js"></script>
@@ -22,6 +18,10 @@
 <!-- brushes -->
 <script type="text/javascript" src="brush.js"></script>
 <script type="text/javascript" src="solidcolorbrush.js"></script>
+
+<!-- controls -->
+<script type="text/javascript" src="panel.js"></script>
+<script type="text/javascript" src="canvas.js"></script>
 
 <!-- shapes -->
 <script type="text/javascript" src="shape.js"></script>
@@ -52,7 +52,9 @@
 
   rect.fill = new SolidColorBrush ("#ffffff");
 
-  canvas.children.add (rect);
+//  rect.addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
 
-  host.rootVisual = canvas;
+  canvas.children.addItem (rect);
+
+  host.setRootVisual (canvas);
 </script>

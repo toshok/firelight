@@ -30,6 +30,16 @@ Size.prototype = {
 	}
     },
 
+    shrinkBy: function (w, h) {
+	if (typeof (h) == "undefined") {
+	    // treat w like a thickness.
+	    return this.growBy ({left: -w.left, top: -w.top, right: -w.right, bottom: -w.bottom});
+	}
+	else {
+	    return new Size (this.width - w, this.height - h);
+	}
+    },
+
     toString: function () {
 	return this.width + "," + this.height;
     },

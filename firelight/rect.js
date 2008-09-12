@@ -51,6 +51,43 @@ Rect.prototype = {
 			 Math.floor (this.top + this.height) - Math.ceil (this.top));
     },
 
+    shrinkBy: function (left, top, right, bottom) {
+	if (typeof (top) == "undefined") {
+	    // treat left as a thickness
+	    var thickness = left;
+
+	    return this.growBy ({left: -thickness.left, right: -thickness.right, top: -thickness.top, bottom: -thickness.bottom});
+	}
+	else {
+	    return this.growBy (-left, -top, -right, -bottom);
+	}
+    },
+
+    growBy: function (left, top, right, bottom) {
+	if (typeof (top) == "undefined") {
+	    // treat left as a thickness
+	    var result = new Rect (this.left, this.top, this.width, this.height);
+	    var thickness = left;
+
+	    result.left -= thickness.left;
+	    result.top -= thickness.top;
+	    result.width += thickness.left + thickness.right;
+	    result.height += thickness.top + thickness.bottom;
+
+	    return result;
+	}
+	else {
+	    var result = new Rect (this.left, this.top, this.width, this.height);
+
+	    result.left -= left;
+	    result.top -= top;
+	    result.width += left + right;
+	    result.height += top + bottom;
+
+	    return result;
+	}
+    },
+
     toString: function () {
 	return left + "," + top + "," + width + "," + height;
     },

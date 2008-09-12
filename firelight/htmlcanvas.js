@@ -15,7 +15,7 @@ HtmlCanvasHost.prototype = {
 
 	    // measure/arrange.  this should likely be done someplace else.
 
-	    this.rootVisual.measure (/* XXX get the width/height of the canvas element */);
+	    this.rootVisual.measure (new Size (500, 500));
 	    this.rootVisual.arrange (this.rootVisual.desiredSize);
 	}
     },

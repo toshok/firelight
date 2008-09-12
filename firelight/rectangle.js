@@ -5,7 +5,8 @@ function Rectangle ()
 Rectangle.prototype = $.extend(new Shape(), {
 
     measureOverride: function (availableSize) {
-	    var result = this.prototype.measureOverride (availableSize);
+	    console.log ("in Rectangle.measureOverride");
+	    var result = this.__proto__.__proto__.measureOverride (availableSize);
 
 // 	    if (GetStretch () != StretchNone)
 // 		size = size.Min (0,0);
@@ -14,7 +15,8 @@ Rectangle.prototype = $.extend(new Shape(), {
     },
 
     arrangeOverride: function (finalSize) {
-	    var result = this.prototype.arrangeOverride (finalSize);
+	    console.log ("in Rectangle.arrangeOverride");
+	    var result = this.__proto__.__proto__.arrangeOverride (finalSize);
 
 // 	    if (GetStretch () != StretchNone)
 // 		size = size.Min (0,0);

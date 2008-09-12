@@ -1,12 +1,13 @@
 function UIElement ()
 {
+    DependencyObject.apply (this, arguments);
 }
 
 UIElement.prototype = $.extend(new DependencyObject(), {
     disconnectHost: function () {
 	    this.host = null;
 
-	    var logicalChildren = getLogicalChildren ();
+	    var logicalChildren = this.getLogicalChildren ();
 	    if (logicalChildren) {
 		for (var i = 0; i < logicalChildren.length; i ++)
 		    logicalChildren[i].disconnectHost ();
@@ -16,11 +17,15 @@ UIElement.prototype = $.extend(new DependencyObject(), {
     connectHost: function (host) {
 	    this.host = host;
 
-	    var logicalChildren = getLogicalChildren ();
+	    var logicalChildren = this.getLogicalChildren ();
 	    if (logicalChildren) {
 		for (var i = 0; i < logicalChildren.length; i ++)
 		    logicalChildren[i].connectHost (host);
 	    }
+    },
+
+    getLogicalChildren: function () {
+	    return null;
     },
 
     getVisualParent: function () {

@@ -1,10 +1,13 @@
 function FrameworkElement ()
 {
+    UIElement.apply (this, arguments);
 }
 
 FrameworkElement.prototype = $.extend(new UIElement(), {
 
     measureOverride: function (size) {
+	    console.log ("in FrameworkElement.measureOverride");
+
 	    if (!this.getVisualParent() || this.getVisualParent().constructor == Canvas)
 		return new Size (NaN, NaN);
 
@@ -12,8 +15,9 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
     },
 
     arrangeOverride: function (rect) {
+	    console.log ("in FrameworkElement.arrangeOverride");
 	    if (!this.getVisualParent () || this.getVisualParent ().constructor == Canvas)
-		return new Size (NAN,NAN);
+		return new Size (NaN,NaN);
     },
 
     toString: function () {
@@ -43,11 +47,11 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 	    }
 
 	    // postcondition the results
-	    size = size.Min (specified);
-	    size = size.Max (specified);
+	    size = size.min (specified);
+	    size = size.max (specified);
 
-	    size = size.min (this.maxWidth (), this.maxHeight ());
-	    size = size.max (this.minWidth (), this.minHeight ());
+	    size = size.min (this.maxWidth, this.maxHeight);
+	    size = size.max (this.minWidth, this.minHeight);
 
 	    size = size.growBy (this.margin);
 

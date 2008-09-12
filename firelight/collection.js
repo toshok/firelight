@@ -1,5 +1,7 @@
 function Collection ()
 {
+    DependencyObject.apply (this, arguments);
+
     this.items = [];
     this.changeHandlers = [];
 }
@@ -15,7 +17,7 @@ Collection.prototype = $.extend(new DependencyObject(), {
 
     // XXX removeCollectionChangeHandler plz
 
-    add: function (item) {
+    addItem: function (item) {
 	    var index = this.items.length;
 	    this.items.push (item);
 	    this.setValue (Collection.CountProperty, index + 1);
@@ -24,20 +26,25 @@ Collection.prototype = $.extend(new DependencyObject(), {
 					 newItem: item });
     },
 
-    remove: function (item) {
+    removeItem: function (item) {
 	    throw "not implemented yet";
     },
 
-    removeAt: function (index) {
+    removeItemAt: function (index) {
 	    throw "not implemented yet";
     },
 
-    getValueAt: function (index) {
-	    throw "not implemented yet";
+    getItemAt: function (index) {
+	    return this.items[index];
     },
 
-    setValueAt: function (index, item) {
-	    throw "not implemented yet";
+    setItemAt: function (index, item) {
+	    var old_item = this.items[index];
+	    this.items[index] = item;
+	    this.notifyChangeHandlers ({ type: "change",
+					 index: index,
+					 oldItem: old_item,
+					 newItem: item });
     },
 
     notifyChangeHandlers: function (args) {
