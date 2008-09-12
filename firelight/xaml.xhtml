@@ -1,0 +1,84 @@
+<?xml version='1.0'?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:svg="http://www.w3.org/2000/svg">
+  <head>
+    <title>firelight</title>
+    <script type="text/javascript" src="jquery-1.2.6.js" />
+
+    <!-- infrastructure -->
+    <script type="text/javascript" src="dependencyproperty.js" />
+    <script type="text/javascript" src="dependencyobject.js" />
+    <script type="text/javascript" src="uielement.js" />
+    <script type="text/javascript" src="frameworkelement.js" />
+
+    <!-- misc types -->
+    <script type="text/javascript" src="rect.js" />
+    <script type="text/javascript" src="size.js" />
+
+    <!-- brushes -->
+    <script type="text/javascript" src="brush.js" />
+    <script type="text/javascript" src="solidcolorbrush.js" />
+    <script type="text/javascript" src="gradientbrush.js" />
+    <script type="text/javascript" src="gradientstop.js" />
+    <script type="text/javascript" src="lineargradientbrush.js" />
+
+    <!-- collections -->
+    <script type="text/javascript" src="collection.js" />
+    <script type="text/javascript" src="triggercollection.js" />
+    <script type="text/javascript" src="uielementcollection.js" />
+    <script type="text/javascript" src="gradientstopcollection.js" />
+
+    <!-- controls -->
+    <script type="text/javascript" src="panel.js" />
+    <script type="text/javascript" src="canvas.js" />
+
+    <!-- shapes -->
+    <script type="text/javascript" src="shape.js" />
+    <script type="text/javascript" src="rectangle.js" />
+
+    <!-- our host -->
+    <script type="text/javascript" src="svghost.js" />
+
+    <script type="text/javascript">
+      <![CDATA[
+	$(document).ready(function() {
+	  var host = new SvgHost ();
+
+	  var root = XamlReader.loadFromUrl ("#xaml");
+
+	  host.findName("canvas").addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
+
+	  host.setDOMElement (document.getElementById("svg-host")); // jquery doesn't seem to work here
+	  host.setRootVisual (root);
+	  host.render ();
+	});
+      ]]>
+    </script>
+  </head>
+
+  <body>
+    <svg:svg id="svg-host"
+	     width="1024"
+	     height="768"
+	     version="1.1"
+	     xmlns:xlink="http://www.w3.org/1999/xlink">
+    </svg:svg>
+
+    <script type="application/xaml" id="name">
+      <![CDATA[
+<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Name="canvas" Width="800" Height="500">
+<Canvas.Fill>
+  <LinearGradientBrush>
+    <GradientStop Offset="0" Color="red" />
+    <GradientStop Offset="1" Color="blue" />
+  </LinearGradientBrush>
+</Canvas.Fill>
+</Canvas>
+      ]]>
+    </script>
+
+
+  </body>
+</html>
