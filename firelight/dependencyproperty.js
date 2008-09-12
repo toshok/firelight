@@ -28,7 +28,11 @@ var DependencyProperties = {
     dependency_properties: {},
 
     getKey: function (ownerType, name) {
-	return ownerType.name + "." + name;
+	var typeName = ownerType.name;
+
+	if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
+
+	return typeName + "." + name;
     },
 
     defineAccessors: function (prop) {
