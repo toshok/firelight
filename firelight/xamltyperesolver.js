@@ -1,27 +1,3 @@
-// ignore firebug stuff on non-firebug browsers
-if (typeof (window.console) == "undefined") {
-    var console = {
-	log: function (str) { }
-    }
-
-    window.console = console;
-}
-
-var v = function () {
-    function bar () { }
-    if ("name" in bar)
-	return;
-    else {
-	alert ("installing function name getter");
-	Function.prototype.__defineGetter__ ("name", 
-					     function () {
-						 var n = (/\W*function\s+([\w\$]+)\s*\(/.exec(this.toString()));
-						 if (!n) return null;
-						 return n[1];
-					     });
-    }
-} ();
-
 // we simulate namespaces with associative arrays
 function TypesCtor () {
     function registerNamespace (ns) {
@@ -43,7 +19,8 @@ function TypesCtor () {
 	    var o = Types;
 	    for (var i = 0; i < nss.length; i ++) {
 		if (!(nss[i] in o))
-		    throw "could not find '" + nss[i] + "' element in namespace '" + ns + "'";
+		    return null; // the namespace hasn't had any types
+			         // registered in it.
 		o = o[nss[i]];
 	    }
 	    return o;
@@ -52,7 +29,7 @@ function TypesCtor () {
         registerType: function (ns, t) {
 	    var nsobj = registerNamespace (ns);
 	    var typeName = t.name;
-	    if (!typeName) throw "could not determine type name to register";
+	    if (!typeName) throw new Error ("could not determine type name to register");
 	    nsobj[typeName] = t;
 	}
     };
@@ -73,7 +50,7 @@ function XamlTypeResolverCtor () {
 	resolveQualifiedType: function (qualifiedTypeName) {
 	    console.log ("resolveQualifiedType (" + qualifiedTypeName + ")");
 	    var dot = qualifiedTypeName.lastIndexOf('.');
-	    if (dot == -1) throw "you must specify a fully qualified type name";
+	    if (dot == -1) throw new Error ("you must specify a fully qualified type name");
 
 	    var ns = qualifiedTypeName.substring (0, dot);
 	    var typeName = qualifiedTypeName.substring (dot+1);
@@ -84,13 +61,13 @@ function XamlTypeResolverCtor () {
 		t = nsobj[typeName];
 	    }
 
-	    if (!t) throw "unable to resolve type '" + qualifiedTypeName + "'";
+	    if (!t) throw new Error ("unable to resolve type '" + qualifiedTypeName + "'");
 	    return t;
 	},
 
 	resolveType: function (nodename, namespace) {
 	    var ns_list = maps[namespace];
-	    if (!ns_list) throw "unable to locate mapping for xmlns '" + namespace + "'";
+	    if (!ns_list) throw new Error ("unable to locate mapping for xmlns '" + namespace + "'");
 
 	    var t = null;
 	    for (var i = 0; i < ns_list.length; i ++) {
@@ -101,7 +78,7 @@ function XamlTypeResolverCtor () {
 		    break;
 		}
 	    }
-	    if (!t) throw "unable to resolve type '" + nodename + "' in xmlns '" + namespace + "'";
+	    if (!t) throw new Error ("unable to resolve type '" + nodename + "' in xmlns '" + namespace + "'");
 	    return t;
 	}
     };
@@ -113,4 +90,5 @@ XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Controls");
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media");
 XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media.Animation");
+XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Shapes");
 // XXX more here I'm sure
