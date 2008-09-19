@@ -4,7 +4,7 @@ function Panel ()
 
     // XXX there has to be an easier way to do this...
     var panel = this;
-    var callback = this.childrenChanged;
+    var callback = panel.childrenChanged;
     this.children.addCollectionChangeHandler (function (sender, args) { callback.apply (panel, arguments); });
 }
 
@@ -12,23 +12,30 @@ Panel.prototype = $.extend(new FrameworkElement(), {
     contentProperty: "Children",
 
     childrenChanged: function (col, args) {
-	    console.log ("in childrenChanged, args = {");
-	    for (var k in args) { console.log (" " + k + " = " + args[k]); }
-	    this.invalidateMeasure ();
+	console.log ("in childrenChanged, args = {");
+	for (var k in args) { console.log (" " + k + " = " + args[k]); }
+	this.invalidateMeasure ();
+
+	if (args.type == "change" || args.type == "remove")
+	    args.oldItem.visualParent = null;
+	if (args.type == "change" || args.type == "add")
+	    args.newItem.visualParent = this;
     },
 
     toString: function () {
-	    return "Panel";
+	return "Panel";
     },
 
     getLogicalChildren: function () {
-	    return this.children;
-    },
+	return this.children;
+    }
 });
 
 DependencyProperties.register (Panel, "Children",
 			       { defaultValue: function () { return new UIElementCollection(); },
+				 propertyType: UIElementCollection,
 				 readOnly: true });
-DependencyProperties.register (Panel, "Background");
+DependencyProperties.register (Panel, "Background",
+			       { propertyType: Brush } );
 
 Types.registerType ("System.Windows.Controls", Panel);

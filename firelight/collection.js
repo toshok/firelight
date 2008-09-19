@@ -8,43 +8,63 @@ function Collection ()
 
 Collection.prototype = $.extend(new DependencyObject(), {
     toString: function () {
-	    return "Collection";
+	return "Collection";
     },
 
     addCollectionChangeHandler: function (handler) {
-	    this.changeHandlers.push (handler);
+	this.changeHandlers.push (handler);
     },
 
     // XXX removeCollectionChangeHandler plz
 
     addItem: function (item) {
-	    var index = this.items.length;
-	    this.items.push (item);
-	    this.setValue (Collection.CountProperty, index + 1);
-	    this.notifyChangeHandlers ({ type: "add",
-					 index: index,
-					 newItem: item });
+	var index = this.items.length;
+	this.items.push (item);
+	this.setValue (Collection.prototype.CountProperty, index + 1);
+	this.notifyChangeHandlers ({ type: "add",
+				     index: index,
+				     newItem: item });
+
+	if (item.addPropertyChangeListener) {
+	    var that = this;
+	    item.addPropertyChangeListener (null, function (args) {
+		that.notifyChangeHandlers ({ type: "itemChange",
+					     item: item,
+					     args: args });
+	    });
+	}
     },
 
     removeItem: function (item) {
-	    throw "not implemented yet";
+	throw new Error ("not implemented yet");
     },
 
     removeItemAt: function (index) {
-	    throw "not implemented yet";
+	throw new Error ("not implemented yet");
     },
 
     getItemAt: function (index) {
-	    return this.items[index];
+	return this.items[index];
     },
 
     setItemAt: function (index, item) {
-	    var old_item = this.items[index];
-	    this.items[index] = item;
-	    this.notifyChangeHandlers ({ type: "change",
-					 index: index,
-					 oldItem: old_item,
-					 newItem: item });
+	var old_item = this.items[index];
+	this.items[index] = item;
+	this.notifyChangeHandlers ({ type: "change",
+				     index: index,
+				     oldItem: old_item,
+				     newItem: item });
+
+	// XXX remove the old change handler
+
+	if (item.addPropertyChangeListener) {
+	    var that = this;
+	    item.addPropertyChangeListener (null, function (args) {
+		that.notifyChangeHandlers ({ type: "itemChange",
+					     item: item,
+				             args: args });
+	    });
+	}
     },
 
     notifyChangeHandlers: function (args) {
@@ -58,7 +78,7 @@ Collection.prototype = $.extend(new DependencyObject(), {
 
 	for (i = 0; i < copy.length; i ++)
 	    copy[i] (this, args);
-    },
+    }
 
 });
 

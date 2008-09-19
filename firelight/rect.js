@@ -90,5 +90,5 @@ Rect.prototype = {
 
     toString: function () {
 	return left + "," + top + "," + width + "," + height;
-    },
+    }
 };

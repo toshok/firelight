@@ -5,8 +5,8 @@ function GradientStop ()
 
 GradientStop.prototype = $.extend(new DependencyObject(), {
     toString: function () {
-	    return "GradientStop";
-    },
+	return "GradientStop";
+    }
 });
 
 DependencyProperties.register (GradientStop, "Color",

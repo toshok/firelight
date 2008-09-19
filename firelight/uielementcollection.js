@@ -5,8 +5,8 @@ function UIElementCollection ()
 
 UIElementCollection.prototype = $.extend(new Collection(), {
     toString: function () {
-	    return "UIElementCollection";
-    },
+	return "UIElementCollection";
+    }
 });
 
 Types.registerType ("System.Windows.Controls", UIElementCollection);

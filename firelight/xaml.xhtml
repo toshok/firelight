@@ -4,17 +4,27 @@
   <head>
     <title>firelight</title>
     <script type="text/javascript" src="jquery-1.2.6.js" />
-
-    <script type="text/javascript" src="firelight.js" />
+    <script type="text/javascript" src="misc.js" />
+    <script type="text/javascript" src="binding.js" />
 
     <!-- infrastructure -->
+    <script type="text/javascript" src="coerceValueHelpers.js" />
+    <script type="text/javascript" src="xamltyperesolver.js" />
     <script type="text/javascript" src="xamlreader.js" />
     <script type="text/javascript" src="dependencyproperty.js" />
     <script type="text/javascript" src="dependencyobject.js" />
+    <script type="text/javascript" src="collection.js" />
+    <script type="text/javascript" src="transformcollection.js" />
+    <script type="text/javascript" src="transform.js" />
+    <script type="text/javascript" src="rotatetransform.js" />
+    <script type="text/javascript" src="scaletransform.js" />
+    <script type="text/javascript" src="translatetransform.js" />
+    <script type="text/javascript" src="transformgroup.js" />
     <script type="text/javascript" src="uielement.js" />
     <script type="text/javascript" src="frameworkelement.js" />
 
     <!-- misc types -->
+    <script type="text/javascript" src="point.js" />
     <script type="text/javascript" src="rect.js" />
     <script type="text/javascript" src="size.js" />
 
@@ -26,7 +36,6 @@
     <script type="text/javascript" src="lineargradientbrush.js" />
 
     <!-- collections -->
-    <script type="text/javascript" src="collection.js" />
     <script type="text/javascript" src="triggercollection.js" />
     <script type="text/javascript" src="uielementcollection.js" />
     <script type="text/javascript" src="gradientstopcollection.js" />
@@ -48,16 +57,13 @@
 	  var host = new SvgHost ();
           host.setDOMElement (document.getElementById("svg-host")); // jquery doesn't seem to work here
 
-	  XamlReader.loadFromUrl ("test.xaml",
+	  XamlReader.loadFromUrl ("test3.xaml",
                                   function (root) {
-
-alert ("made it here");
 
 //                                      host.findName("canvas").addEventListener ("MouseLeftButtonDown",
 //                                                                                function(sender, args) { alert ("button down!"); });
 
                                       host.setRootVisual (root);
-                                      host.render ();
                                   });
 	});
       ]]>
@@ -68,9 +74,6 @@ alert ("made it here");
     <svg:svg id="svg-host"
 	     width="1024"
 	     height="768"
-	     version="1.1"
-	     xmlns:xlink="http://www.w3.org/1999/xlink">
-    </svg:svg>
-
+	     version="1.1" />
   </body>
 </html>

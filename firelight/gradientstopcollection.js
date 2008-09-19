@@ -5,8 +5,8 @@ function GradientStopCollection ()
 
 GradientStopCollection.prototype = $.extend(new Collection(), {
     toString: function () {
-	    return "GradientStopCollection";
-    },
+	return "GradientStopCollection";
+    }
 });
 
 Types.registerType ("System.Windows.Media", GradientStopCollection);
