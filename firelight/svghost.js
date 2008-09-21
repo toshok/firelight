@@ -8,8 +8,8 @@ SvgHost.prototype = {
     setDOMElement: function (el) {
 	this.root = el;
 
-	this.content = document.createElementNS ("http://www.w3.org/2000/svg", "g");
-	this.defs = document.createElementNS ("http://www.w3.org/2000/svg", "defs");
+	this.content = document.createElementNS (FirelightConsts.SVGns, "g");
+	this.defs = document.createElementNS (FirelightConsts.SVGns, "defs");
 
 	this.content.appendChild (this.defs);
 
@@ -48,5 +48,5 @@ SvgHost.prototype = {
 	}
 
 	window["rootVisual"] = v;
-    },
+    }
 };

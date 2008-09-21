@@ -86,9 +86,9 @@ function XamlTypeResolverCtor () {
 
 var XamlTypeResolver = new XamlTypeResolverCtor();
 
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows");
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Controls");
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media");
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Media.Animation");
-XamlTypeResolver.addNamespaceMap ("http://schemas.microsoft.com/winfx/2006/xaml/presentation", "System.Windows.Shapes");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Controls");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media.Animation");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Shapes");
 // XXX more here I'm sure

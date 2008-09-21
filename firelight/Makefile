@@ -1,6 +1,7 @@
 TARGET_DEBUG=firelight-debug.js
 
-JS_SOURCES=	misc.js				\
+JS_SOURCES=	consts.js			\
+		misc.js				\
 		binding.js			\
 		fillbehavior.js			\
 		repeatbehavior.js		\

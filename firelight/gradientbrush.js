@@ -9,7 +9,7 @@ GradientBrush.prototype = $.extend(new Brush(), {
     applyToPeer: function (host, peer, property) {
 	this.gradientId = getDefId ();
 
-	this.gradientDef = document.createElementNS ("http://www.w3.org/2000/svg", this.svgGradientElement);
+	this.gradientDef = document.createElementNS (FirelightConsts.SVGns, this.svgGradientElement);
 	this.gradientDef.setAttributeNS (null, "id", this.gradientId);
 
 	var that = this;
@@ -31,7 +31,7 @@ GradientBrush.prototype = $.extend(new Brush(), {
 	// then regenerate them
 	for (var i = 0; i < this.gradientStops.count; i ++) {
 	    var stop = this.gradientStops.getItemAt(i);
-	    var peer = document.createElementNS ("http://www.w3.org/2000/svg", "stop");
+	    var peer = document.createElementNS (FirelightConsts.SVGns, "stop");
 	    //console.log ("creating <stop offset="+ stop.offset + " color=" + stop.color + " />");
 	    peer.setAttributeNS (null, "offset", stop.offset);
 	    peer.setAttributeNS (null, "stop-color", stop.color);

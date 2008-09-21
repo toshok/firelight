@@ -26,7 +26,7 @@ var XamlReader = {
 
     // x:Class overrides the builtin type for the element (we should
     // probably check if it's a subclass of the localName's type?)
-    var nodeTypeName = xmlNode.getAttributeNodeNS ("http://schemas.microsoft.com/winfx/2006/xaml", "Class");
+    var nodeTypeName = xmlNode.getAttributeNodeNS (FirelightConsts.XAMLxns, "Class");
     if (nodeTypeName) nodeTypeName = nodeTypeName.value;
 
     var nodeType;
@@ -40,7 +40,7 @@ var XamlReader = {
     }
 
     // deal with x:Name here
-    var nodeName = xmlNode.getAttributeNodeNS ("http://schemas.microsoft.com/winfx/2006/xaml", "Name");
+    var nodeName = xmlNode.getAttributeNodeNS (FirelightConsts.XAMLxns, "Name");
     if (nodeName)
       nodeName = nodeName.value;
 

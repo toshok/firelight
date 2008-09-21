@@ -29,7 +29,7 @@ Rectangle.prototype = $.extend(new Shape(), {
   },
 
   createPeer: function (host) {
-	var peer = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
+	var peer = document.createElementNS (FirelightConsts.SVGns, "rect");
 
 	if (this.fill)
 	    this.fill.applyToPeer (host, peer, "fill");

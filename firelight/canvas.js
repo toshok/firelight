@@ -50,7 +50,7 @@ Canvas.prototype = $.extend(new Panel(), {
   },
 
   createPeer: function (host) {
-    var peer = document.createElementNS ("http://www.w3.org/2000/svg", "g");
+    var peer = document.createElementNS (FirelightConsts.SVGns, "g");
     if (this.renderTransform) {
       this.renderTransform.applyToPeer (host, peer, "transform");
     }
@@ -62,7 +62,7 @@ Canvas.prototype = $.extend(new Panel(), {
 					      });
 
     if (this.background) {
-      var rect = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
+      var rect = document.createElementNS (FirelightConsts.SVGns, "rect");
       this.background.applyToPeer (host, rect, "fill");
 
       this.renderSizeBinding = new Binding (function () {
