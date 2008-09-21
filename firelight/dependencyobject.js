@@ -4,7 +4,7 @@ function DependencyObject ()
   this.wildcard_listeners = [];
   this.properties = {};
 
-  this.type == this.__proto__;
+  this.type = this.__proto__;
 }
 
 DependencyObject.prototype = $.extend(new Object(), {
