@@ -41,7 +41,7 @@ Canvas.prototype = $.extend(new Panel(), {
     for (var i = 0; i < children.count; i ++) {
       var child = children.getItemAt (i);
       child.arrange (new Rect (Canvas.getLeft (child), Canvas.getTop(child),
-      Infinity, Infinity));
+			       Infinity, Infinity));
       // XXX fill layout slot?
     }
 
