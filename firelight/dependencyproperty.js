@@ -1,5 +1,5 @@
 var DependencyProperties = {
-    
+
     registerAttached: function (ownerType, name, metadata) {
 	var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, true, metadata);
 
@@ -55,7 +55,7 @@ var DependencyProperties = {
     },
 
     registerDependencyProperty: function (dp) {
-    
+
 	if (this.dependency_properties [ dp.key ] != null) throw ("DependencyProperty " + dp.key + " already registered");
 
 	this.dependency_properties [ dp.key ] = dp;
@@ -98,7 +98,7 @@ DependencyProperty.prototype = $.extend (new Object(), {
 			    throw new Error ("can't determine propertyType using defaultValue of " + this.key);
 		    }
 		    else {
-			throw new Error ("err, is there another typeof that we care about? " + tof);
+		      throw new Error ("unrecognized property type for DependencyProperty " + this.key);
 		    }
 		}
 		else {

@@ -138,4 +138,8 @@ DependencyProperties.register (FrameworkElement, "Margin",
 				 },
 				 affectsMeasure: true });
 
+DependencyProperties.register (FrameworkElement, "Triggers",
+			       { defaultValue: function () { return new TriggerCollection(); },
+				 propertyType: TriggerCollection });
+
 Types.registerType ("System.Windows", FrameworkElement);

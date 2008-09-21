@@ -58,8 +58,6 @@ DependencyProperties.register (UIElement, "Opacity",
 			       { defaultValue: 1.0,
 				 affectsRender: true });
 DependencyProperties.register (UIElement, "Tag");
-DependencyProperties.register (UIElement, "Triggers",
-			       { defaultValue: function () { return new TriggerCollection(); } });
 DependencyProperties.register (UIElement, "RenderTransform",
 			       { defaultValue: function () { return new TransformGroup(); },
 				 propertyType: Transform,

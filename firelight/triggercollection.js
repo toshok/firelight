@@ -9,3 +9,4 @@ TriggerCollection.prototype = $.extend(new Collection(), {
     }
 });
 
+Types.registerType ("System.Windows", TriggerCollection);
