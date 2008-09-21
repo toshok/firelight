@@ -1,4 +1,4 @@
 Firelight:  a silverlight/moonlight-like system, completely written in Javascript.
             It will use HTML5 <video> elements for video playback, and uses SVG as
             its backend, with a portability layer between firelight and SVG to deal
-	    with differences in SVG browser implementations.
+            with differences in SVG browser implementations.
