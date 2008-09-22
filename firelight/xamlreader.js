@@ -1,11 +1,11 @@
 var XamlReader = {
 
   loadFromUrl: function (url, callback) {
-    function dataLoaded (data, textStatus) {
-      console.log ("dataLoaded, textStatus = " + textStatus + ", data = " + data);
-      callback (XamlReader.loadFromNode (data.documentElement));
-    }
-    jQuery.get (url, {}, dataLoaded, "xml");
+    jQuery.get (url, {},
+		function (data, textStatus) {
+		  console.log ("dataLoaded, textStatus = " + textStatus + ", data = " + data);
+		  callback (XamlReader.loadFromNode (data.documentElement));
+		}, "xml");
   },
 
   loadFromString: function (string) {
