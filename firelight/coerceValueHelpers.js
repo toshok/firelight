@@ -17,7 +17,7 @@ function coerceValueToBrush (v)
     return new SolidColorBrush (v);
   }
   else {
-    console.log ("returning object in coerceValueToBrush");
+    console.log ("FIXME: returning object unmolested in coerceValueToBrush");
     return v;
   }
   //throw "value '" + v + "' is invalid for this property";
@@ -29,6 +29,10 @@ function coerceValueToPoint (v)
     var ps = v.split (',');
     console.log ("creating new Point (" + ps[0] + ", " + ps[1] + ")");
     return new Point (ps[0], ps[1]);
+  }
+  else if (typeof (v.x) == "number" &&
+	   typeof (v.y) == "number") {
+    return v;
   }
   throw new Error ("don't know how to convert '" + v + "' to a point");
 }
