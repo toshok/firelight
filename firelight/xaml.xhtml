@@ -21,6 +21,20 @@
                                       host.setRootVisual (root);
                                   });
 	});
+
+	function moveRect () {
+		 var endpoint = 200;
+		 var tickAmount = 5;
+		 var tickTime = 50;
+		 var rect = rootVisual.children.getItemAt(0);
+		 function moveRectTimeout () {
+		 	  if (Canvas.getLeft (rect) < endpoint) {
+			     Canvas.setLeft (rect, Canvas.getLeft (rect) + tickAmount);
+			     setTimeout (moveRectTimeout, tickTime);
+			  }
+		 }
+		 setTimeout (moveRectTimeout, tickTime);
+	}
       ]]>
     </script>
   </head>

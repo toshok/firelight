@@ -5,6 +5,9 @@ JS_SOURCES=	consts.js			\
 		binding.js			\
 		fillbehavior.js			\
 		repeatbehavior.js		\
+		timespan.js			\
+		timespan.js			\
+		duration.js			\
 		coerceValueHelpers.js		\
 		xamltyperesolver.js		\
 		xamlreader.js			\
@@ -41,6 +44,9 @@ JS_SOURCES=	consts.js			\
 		doubleanimation.js		\
 		storyboard.js			\
 		beginstoryboard.js		\
+		animationmanager.js		\
+		layoutinformation.js		\
+		layoutmanager.js		\
 		svghost.js
 
 $(TARGET_DEBUG)-stamp: $(JS_SOURCES)

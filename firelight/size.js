@@ -23,7 +23,7 @@ Size.prototype = {
 	    var t = w;
 	    w = this.width + (t.left || 0) + (t.right || 0);
 	    h = this.height + (t.top || 0) + ( t.bottom || 0);
-	    return new Size (w > 0 ? w : 0, h > 0 ? h : 0); 
+	    return new Size (w > 0 ? w : 0, h > 0 ? h : 0);
 	}
 	else {
 	    return new Size (w + this.width, h + this.height);
@@ -42,5 +42,5 @@ Size.prototype = {
 
     toString: function () {
 	return this.width + "," + this.height;
-    },
+    }
 };

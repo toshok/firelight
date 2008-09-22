@@ -1,53 +1,72 @@
 function UIElement ()
 {
-    DependencyObject.apply (this, arguments);
+  DependencyObject.apply (this, arguments);
+  this.visualLevel = 0;
 }
 
 UIElement.prototype = $.extend(new DependencyObject(), {
-    addEventListener: function (eventName, callback) {
-	console.log ("XXX addEventListener needs implementing");
-    },
+  addEventListener: function (eventName, callback) {
+    console.log ("XXX addEventListener needs implementing");
+  },
 
-    disconnectHost: function () {
-	this.host = null;
+  disconnectHost: function () {
+    this.host = null;
 
-	var logicalChildren = this.getLogicalChildren ();
-	if (logicalChildren instanceof Collection) {
-	    for (var i = 0; i < logicalChildren.count; i ++)
-		logicalChildren.getItemAt(i).disconnectHost ();
-	}
-    },
+    var logicalChildren = this.getLogicalChildren ();
+    if (logicalChildren instanceof Collection) {
+      for (var i = 0; i < logicalChildren.count; i ++)
+	logicalChildren.getItemAt(i).disconnectHost ();
+      }
+  },
 
-    connectHost: function (host) {
-	this.host = host;
+  connectHost: function (host) {
+    this.host = host;
 
-	var logicalChildren = this.getLogicalChildren ();
-	if (logicalChildren instanceof Collection) {
-	    for (var i = 0; i < logicalChildren.count; i ++)
-		logicalChildren.getItemAt(i).connectHost (host);
-	}
-    },
+    var logicalChildren = this.getLogicalChildren ();
+    if (logicalChildren instanceof Collection) {
+      for (var i = 0; i < logicalChildren.count; i ++)
+	logicalChildren.getItemAt(i).connectHost (host);
+      }
+  },
 
-    getLogicalChildren: function () {
-	return null;
-    },
+  getLogicalChildren: function () {
+    return null;
+  },
 
-    getVisualParent: function () {
-	return this.visualParent; // XXX
-    },
+  getVisualParent: function () {
+    return this.visualParent; // XXX
+  },
 
-    invalidateMeasure: function () {
-    },
+  setVisualParent: function (p) {
+    this.visualParent = p;
+    if (this.visualParent)
+      this.visualLevel = this.visualParent.visualLevel + 1;
+    else
+      this.visualLevel = 0;
+  },
 
-    invalidateArrange: function () {
-    },
+  invalidateMeasure: function () {
+    console.log ("invalidateMeasure");
+    if (this.host &&
+      (this.visualParent || this.host.rootVisual == this)) {
+      this.host.addMeasure (this);
+    }
+  },
 
-    updateLayout: function () {
-    },
+  invalidateArrange: function () {
+    console.log ("invalidateArrange");
+    if (this.host &&
+      (this.visualParent || this.host.rootVisual == this)) {
+      this.host.addArrange (this);
+    }
+  },
 
-    toString: function () {
-	return "UIElement";
-    },
+  updateLayout: function () {
+  },
+
+  toString: function () {
+    return "UIElement";
+  }
 });
 
 DependencyProperties.register (UIElement, "IsHitTestVisible",

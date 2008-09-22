@@ -28,4 +28,7 @@
 	</BeginStoryboard>
       </EventTrigger>
   </Canvas.Triggers>
+
+  <Canvas x:Name="child" Width="50" Height="50" Canvas.Left="50" Canvas.Top="50" Background="black"/>
+
 </Canvas>

@@ -29,7 +29,7 @@ Canvas.prototype = $.extend(new Panel(), {
 
   arrangeOverride: function (finalSize) {
     console.log ("BEGIN Canvas.arrangeOverride (" + this.name + "), finalSize = " + finalSize);
-    var result = this.__proto__.__proto__.arrangeOverride (finalSize);
+    var result = FrameworkElement.prototype.arrangeOverride.call (this, finalSize);
 
     // XXX ugly hack to maintain compat
     if (!this.getVisualParent () && this.host.rootVisual != this) {
@@ -55,10 +55,14 @@ Canvas.prototype = $.extend(new Panel(), {
       this.renderTransform.applyToPeer (host, peer, "transform");
     }
 
+    this.cachedTransform = peer.getAttributeNS (null, "transform");
+
     var that = this;
     this.renderPositionBinding = new Binding (function () {
-						peer.setAttributeNS (null, "x", String(that.renderPosition.x));
-						peer.setAttributeNS (null, "y", String(that.renderPosition.y));
+						peer.setAttributeNS (null, "transform",
+								     that.cachedTransform +
+								     "translate (" + that.renderPosition.x + ","
+								                   + that.renderPosition.y + ")");
 					      });
 
     if (this.background) {

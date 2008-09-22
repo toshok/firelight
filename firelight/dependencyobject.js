@@ -27,8 +27,12 @@ DependencyObject.prototype = $.extend(new Object(), {
     }
     else if (propertyType == Number) {
       /* be nice and try to automatically convert strings to numbers */
-      if (typeof (new_value) == "string")
+      if (typeof (new_value) == "string") {
+	var s = new_value;
 	new_value = Number (new_value);
+	if (isNaN(new_value) && s != "NaN")
+	  throw "property " + dp.key + " requires a number value";
+      }
       if (typeof (new_value) != "number")
 	throw "property " + dp.key + " requires a number value";
       this.properties[dp.key] = new_value;

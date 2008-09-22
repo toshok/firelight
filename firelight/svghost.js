@@ -1,52 +1,117 @@
 function SvgHost ()
 {
-    this.root = null;
-    this.rootVisual = null;
+  this.root = null;
+  this.rootVisual = null;
+
+  this.animationManager = new AnimationManager ();
+  this.layoutManager = new LayoutManager ();
+  this.globalTick = 10;
+  this.intervalId = null;
 }
 
 SvgHost.prototype = {
-    setDOMElement: function (el) {
-	this.root = el;
+  setDOMElement: function (el) {
+    this.root = el;
 
-	this.content = document.createElementNS (FirelightConsts.SVGns, "g");
-	this.defs = document.createElementNS (FirelightConsts.SVGns, "defs");
+    this.content = document.createElementNS (FirelightConsts.SVGns, "g");
+    this.defs = document.createElementNS (FirelightConsts.SVGns, "defs");
 
-	this.content.appendChild (this.defs);
+    this.content.appendChild (this.defs);
 
-	this.root.appendChild (this.content);
-    },
+    this.root.appendChild (this.content);
+  },
 
-    setRootVisual: function (v) {
-	if (this.rootVisual)
-	    this.rootVisual.disconnectHost();
+  setRootVisual: function (v) {
+    if (this.rootVisual)
+      this.rootVisual.disconnectHost();
 
-	this.rootVisual = v;
+      this.rootVisual = v;
 
-	if (this.rootVisual) {
-	    // let all the nodes in the hierarchy know about the host
-	    this.rootVisual.connectHost (this);
+      if (this.rootVisual) {
+	// let all the nodes in the hierarchy know about the host
+	this.rootVisual.connectHost (this);
 
-	    // now iterate over the tree, creating peers
-	    var rootPeer = this.rootVisual.createPeer (this);
+	// now iterate over the tree, creating peers
+	var rootPeer = this.rootVisual.createPeer (this);
 
-	    // and add it to the dom
-	    this.content.appendChild (rootPeer);
+	// and add it to the dom
+	this.content.appendChild (rootPeer);
 
-	    // measure/arrange.  this should likely be done someplace
-	    // else (or possibly in a timeout).
+	// measure/arrange.  this should likely be done someplace
+	// else (or possibly in a timeout).
 
-	    // XXX these should be the width/height of the dom element
-	    this.rootVisual.measure (new Size (500, 500));
+	// XXX these should be the width/height of the dom element
+	this.rootVisual.measure (new Size (500, 500));
 
-	    this.rootVisual.arrange (new Rect (0, 0, this.rootVisual.desiredSize.width, this.rootVisual.desiredSize.height));
+	this.rootVisual.arrange (new Rect (0, 0, this.rootVisual.desiredSize.width, this.rootVisual.desiredSize.height));
 
+	// dump the svg structure to the console
+	var serializer = new XMLSerializer( );
+	var str = serializer.serializeToString( this.root );
+	var pretty = XML( str ).toXMLString( );
+	console.log (pretty);
+      }
 
-	    var serializer = new XMLSerializer( );
-	    var str = serializer.serializeToString( this.root );
-	    var pretty = XML( str ).toXMLString( );
-	    console.log (pretty);
-	}
+      // just for testing - makes it easier to access the rootVisual
+      window["rootVisual"] = v;
+  },
 
-	window["rootVisual"] = v;
+  startClock: function () {
+    if (this.intervalId == null) {
+      var that = this;
+      console.log ("starting clock");
+      this.intervalId = setInterval (function () { that.globalClockTick (); }, this.globalTick);
     }
+  },
+
+  stopClock: function () {
+    if (this.intervalId != null) {
+      clearInterval (this.intervalId);
+      this.intervalId = null;
+    }
+  },
+
+  globalClockTick: function () {
+    console.log ("global clock ticking");
+    this.animationManager.processAnimations ();
+    this.layoutManager.processPendingMeasureAndArrange ();
+    this.maybeStopClock ();
+  },
+
+  addMeasure: function (el) {
+    this.layoutManager.addMeasure (el);
+    this.startClock ();
+  },
+
+  addArrange: function (el) {
+    this.layoutManager.addArrange (el);
+    this.startClock ();
+  },
+
+  removeMeasure: function (el) {
+    this.layoutManager.removeMeasure (el);
+  },
+
+  removeArrange: function (el) {
+    this.layoutManager.removeArrange (el);
+  },
+
+  addTimeline: function (tl) {
+    this.animationManager.addTimeline (tl);
+    this.startClock ();
+  },
+
+  removeTimeline: function (tl) {
+    this.animationManager.removeTimeline (tl);
+    this.startClock ();
+  },
+
+  maybeStopClock: function () {
+    if (this.intervalId != -1 &&
+	!this.layoutManager.needClock() &&
+	!this.animationManager.needClock()){
+      console.log ("stopping global clock");
+      this.stopClock ();
+    }
+  }
 };

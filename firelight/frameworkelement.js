@@ -1,112 +1,135 @@
 function FrameworkElement ()
 {
-    UIElement.apply (this, arguments);
+  UIElement.apply (this, arguments);
 
-    this.renderPosition = new Point (0,0);
-    this.renderSize = new Size (NaN,NaN);
+  this.renderPosition = new Point (0,0);
+  this.renderSize = new Size (NaN,NaN);
 }
 
 FrameworkElement.prototype = $.extend(new UIElement(), {
-    measureOverride: function (availableSize) {
-	console.log ("in FrameworkElement.measureOverride");
+  onPropertyChanged: function (args) {
+    console.log ("in FrameworkElement.onPropertyChanged");
+    if (args.property.affectsMeasure)
+      this.invalidateMeasure ();
+    if (args.property.affectsArrange)
+      this.invalidateArrange ();
+    if (args.property.affectsParentMeasure && this.getVisualParent())
+      this.getVisualParent().invalidateMeasure ();
 
-	if (!this.getVisualParent() || this.getVisualParent() instanceof Canvas)
-	    return new Size (NaN, NaN);
+    UIElement.prototype.onPropertyChanged.call (this, args);
+  },
 
-	return new Size (this.width, this.height);
-    },
+  measureOverride: function (availableSize) {
+    console.log ("in FrameworkElement.measureOverride");
 
-    arrangeOverride: function (finalSize) {
-	console.log ("in FrameworkElement.arrangeOverride");
-	if (!this.getVisualParent () || this.getVisualParent () instanceof Canvas)
-	    return new Size (NaN,NaN);
+    if (!this.getVisualParent() || this.getVisualParent() instanceof Canvas)
+      return new Size (NaN, NaN);
 
-	var size = finalSize;
+      return new Size (this.width, this.height);
+  },
 
-	var specified = new Size (this.width, this.height);
+  arrangeOverride: function (finalSize) {
+    console.log ("in FrameworkElement.arrangeOverride (" + this.name + ")");
+//    if (!this.getVisualParent () || this.getVisualParent () instanceof Canvas) {
+//      console.log ("ugly canvas hack");
+//      return new Size (NaN,NaN);
+//    }
 
-	// postcondition the results
-	size = size.min (specified);
-	size = size.max (specified);
+    var size = finalSize;
 
-	return size;
-    },
+    var specified = new Size (this.width, this.height);
 
-    setRenderPosition: function (point) {
-	this.renderPosition = point;
-	if (this.renderPositionBinding)
-	    this.renderPositionBinding.update();
-    },
+    console.log ("size = " + finalSize + ", specified = " + specified);
 
-    toString: function () {
-	return "FrameworkElement";
-    },
+    // postcondition the results
+    size = size.min (specified);
+    size = size.max (specified);
 
+    return size;
+  },
 
-    measure: function (availableSize) {
-	var specified = new Size (this.width, this.height);
+  setRenderPosition: function (point) {
+    this.renderPosition = point;
+    if (this.renderPositionBinding)
+      this.renderPositionBinding.update();
+  },
 
-	var size = availableSize.shrinkBy (this.margin);
+  toString: function () {
+    return "FrameworkElement";
+  },
 
-	size = size.min (specified);
-	size = size.max (specified);
+  measure: function (availableSize) {
+    var specified = new Size (this.width, this.height);
 
-	size = size.min (this.maxWidth, this.maxHeight);
-	size = size.max (this.minWidth, this.minHeight);
+    console.log ("measure on " + this.name + ", specified size = " + specified);
 
-	/*size =*/ this.measureOverride (size);
+    var size = availableSize.shrinkBy (this.margin);
 
-	this.actualWidth = this.width;
-	this.actualHeight = this.height;
+    size = size.min (specified);
+    size = size.max (specified);
 
-	// XXX ugly hack to fake some sort of exception case
-	if (isNaN (size.width) || isNaN (size.height)) {
-	    this.desiredSize = new Size (0, 0);
-	}
+    size = size.min (this.maxWidth, this.maxHeight);
+    size = size.max (this.minWidth, this.minHeight);
 
-	// postcondition the results
-	size = size.min (specified);
-	size = size.max (specified);
+    size = this.measureOverride (size);
 
-	size = size.min (this.maxWidth, this.maxHeight);
-	size = size.max (this.minWidth, this.minHeight);
+    this.actualWidth = this.width;
+    this.actualHeight = this.height;
 
-	size = size.growBy (this.margin);
+    // XXX ugly hack to fake some sort of exception case
+    if (isNaN (size.width) || isNaN (size.height)) {
+      this.desiredSize = new Size (0, 0);
+    }
 
-	size = size.min (availableSize);
+    // postcondition the results
+    size = size.min (specified);
+    size = size.max (specified);
 
-	this.desiredSize = size;
-    },
+    size = size.min (this.maxWidth, this.maxHeight);
+    size = size.max (this.minWidth, this.minHeight);
 
-    arrange: function (finalRect) {
-	finalRect.shrinkBy (this.margin);
+    size = size.growBy (this.margin);
 
-	var size = new Size (finalRect.width, finalRect.height);
+    size = size.min (availableSize);
 
-	/*size = */this.arrangeOverride (size);
+    this.desiredSize = size;
+  },
 
-	// XXX ugly hack to fake some sort of exception case
-	if (isNaN (size.width) || isNaN (size.height)) {
-	    this.renderSize = new Size (0,0);
-	    return;
-	}
+  arrange: function (finalRect) {
+    this.setValue (LayoutInformation.prototype.LayoutSlotProperty,
+		   new Rect (finalRect.left, finalRect.top, finalRect.width, finalRect.height));
 
-	this.renderSize = size;
-	this.actualWidth = size.width;
-	this.actualHeight = size.height;
+    var specified = new Size (this.width, this.height);
+    console.log ("measure on " + this.name + ", specified size = " + specified);
 
-	if (this.renderSizeBinding)
-	    this.renderSizeBinding.update ();
+    finalRect.shrinkBy (this.margin);
 
-	// XXX what do we do with finalRect.x and y?
-	// XXX do this for now
-	this.renderPosition = new Point (finalRect.left, finalRect.top);
-	if (this.renderPositionBinding)
-	    this.renderPositionBinding.update ();
-	console.log (this.name + " renderSize = " + this.renderSize);
+    var size = new Size (finalRect.width, finalRect.height);
 
-	//console.log ("more here in FrameworkElement::Arrange.  move the bounds or something?  set properties?  who knows!?");
-    },
+    size = this.arrangeOverride (size);
+
+    // XXX ugly hack to fake some sort of exception case
+    if (isNaN (size.width) || isNaN (size.height)) {
+      this.renderSize = new Size (0,0);
+      return;
+    }
+
+    this.renderSize = size;
+    this.actualWidth = size.width;
+    this.actualHeight = size.height;
+
+    if (this.renderSizeBinding)
+      this.renderSizeBinding.update ();
+
+    // XXX what do we do with finalRect.x and y?
+    // XXX do this for now
+    this.renderPosition = new Point (finalRect.left, finalRect.top);
+    if (this.renderPositionBinding)
+      this.renderPositionBinding.update ();
+    console.log (this.name + " renderSize = " + this.renderSize);
+
+    //console.log ("more here in FrameworkElement::Arrange.  move the bounds or something?  set properties?  who knows!?");
+    }
 });
 
 DependencyProperties.register (FrameworkElement, "Width",

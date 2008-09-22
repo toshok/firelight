@@ -17,9 +17,9 @@ Panel.prototype = $.extend(new FrameworkElement(), {
 	this.invalidateMeasure ();
 
 	if (args.type == "change" || args.type == "remove")
-	    args.oldItem.visualParent = null;
+	    args.oldItem.setVisualParent (null);
 	if (args.type == "change" || args.type == "add")
-	    args.newItem.visualParent = this;
+	    args.newItem.setVisualParent (this);
     },
 
     toString: function () {

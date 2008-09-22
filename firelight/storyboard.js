@@ -1,10 +1,15 @@
 function Storyboard ()
 {
   Timeline.apply (this, arguments);
+
+  this.running = false;
 }
 
 Storyboard.prototype = $.extend(new Timeline(), {
   contentProperty: "Children",
+
+  begin: function () {
+  },
 
   toString: function () {
     return "Storyboard";

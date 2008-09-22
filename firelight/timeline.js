@@ -13,7 +13,9 @@ DependencyProperties.register (Timeline, "BeginTime",
 			       { propertyType: Number/*XXX Duration*/ });
 
 DependencyProperties.register (Timeline, "Duration",
-			       { propertyType: Number/*XXX Duration*/ });
+			       { defaultValue: function () { return Duration.fromSeconds (1); },
+				 propertyType: Duration,
+				 coerceValue: coerceValueToDuration });
 
 DependencyProperties.register (Timeline, "FillBehavior",
 			       { propertyType: String,
