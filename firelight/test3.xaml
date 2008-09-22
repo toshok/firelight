@@ -29,6 +29,13 @@
       </EventTrigger>
   </Canvas.Triggers>
 
-  <Canvas x:Name="child" Width="50" Height="50" Canvas.Left="50" Canvas.Top="50" Background="black"/>
+  <Canvas x:Name="child" Width="50" Height="50" Canvas.Left="50" Canvas.Top="50">
+    <Canvas.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0%" Color="blue" />
+        <GradientStop Offset="100%" Color="red" />
+      </LinearGradientBrush>
+    </Canvas.Background>
+  </Canvas>
 
 </Canvas>
