@@ -5,7 +5,7 @@ function TypesCtor () {
 	var o = Types;
 	for (var i = 0; i < nss.length; i ++) {
 	    if (!(nss[i] in o)) {
-		console.log ("creating " + o + "." + nss[i]);
+//		console.log ("creating " + o + "." + nss[i]);
 		o[nss[i]] = {};
 	    }
 	    o = o[nss[i]];
@@ -48,7 +48,7 @@ function XamlTypeResolverCtor () {
 	},
 
 	resolveQualifiedType: function (qualifiedTypeName) {
-	    console.log ("resolveQualifiedType (" + qualifiedTypeName + ")");
+//	    console.log ("resolveQualifiedType (" + qualifiedTypeName + ")");
 	    var dot = qualifiedTypeName.lastIndexOf('.');
 	    if (dot == -1) throw new Error ("you must specify a fully qualified type name");
 
