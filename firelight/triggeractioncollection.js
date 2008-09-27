@@ -1,12 +1,12 @@
 function TriggerActionCollection ()
 {
-    Collection.apply (this, arguments);
+  Collection.apply (this, arguments);
 }
 
 TriggerActionCollection.prototype = $.extend(new Collection(), {
-    toString: function () {
-	return "TriggerActionCollection";
-    }
+  toString: function () {
+    return "TriggerActionCollection";
+  }
 });
 
 Types.registerType ("System.Windows", TriggerActionCollection);

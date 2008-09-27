@@ -9,12 +9,12 @@ Canvas.prototype = $.extend(new Panel(), {
   },
 
   measureOverride: function (availableSize) {
-    console.log ("BEGIN Canvas.measureOverride (" + this.name + "), availableSize = " + availableSize);
-    var result = this.__proto__.__proto__.measureOverride (availableSize);
+    Trace.debug ("BEGIN Canvas.measureOverride (" + this.name + "), availableSize = " + availableSize);
+    var result = FrameworkElement.prototype.measureOverride.call (this, availableSize);
 
     // XXX ugly hack to maintain compat
     if (!this.getVisualParent () && this.host.rootVisual != this) {
-      console.log ("RETURN EARLY Canvas.measureOverride (" + this.name + ")");
+      Trace.debug ("RETURN EARLY Canvas.measureOverride (" + this.name + ")");
       return result;
     }
 
@@ -28,12 +28,12 @@ Canvas.prototype = $.extend(new Panel(), {
   },
 
   arrangeOverride: function (finalSize) {
-    console.log ("BEGIN Canvas.arrangeOverride (" + this.name + "), finalSize = " + finalSize);
+    Trace.debug ("BEGIN Canvas.arrangeOverride (" + this.name + "), finalSize = " + finalSize);
     var result = FrameworkElement.prototype.arrangeOverride.call (this, finalSize);
 
     // XXX ugly hack to maintain compat
     if (!this.getVisualParent () && this.host.rootVisual != this) {
-      console.log ("RETURN EARLY Canvas.arrangeOverride (" + this.name + "), " + result);
+      Trace.debug ("RETURN EARLY Canvas.arrangeOverride (" + this.name + "), " + result);
       return result;
     }
 
@@ -45,50 +45,76 @@ Canvas.prototype = $.extend(new Panel(), {
       // XXX fill layout slot?
     }
 
-    console.log ("RETURN Canvas.arrangeOverride (" + this.name + "), " + result);
+    Trace.debug ("RETURN Canvas.arrangeOverride (" + this.name + "), " + result);
     return result;
   },
 
-  createPeer: function (host) {
-    var peer = document.createElementNS (FirelightConsts.SVGns, "g");
-    if (this.renderTransform) {
-      this.renderTransform.applyToPeer (host, peer, "transform");
-    }
+  updateTransform: function () {
+    console.log ("setting the transform to '" + this.renderTransform.svgPropertyValue +
+		 "translate (" + this.renderPosition.x + ","
+		 + this.renderPosition.y + ")'");
+    this.svgPeer.setAttributeNS (null, "transform",
+				 "translate (" + this.renderPosition.x + ","
+				               + this.renderPosition.y + ")"
+				 + this.renderTransform.svgPropertyValue);
+  },
 
-    this.cachedTransform = peer.getAttributeNS (null, "transform");
+  updateRectFill: function () {
+    this.rectPeer.setAttributeNS (null, "fill",
+				  this.background.svgPropertyValue);
+  },
+
+  createPeer: function (host) {
+    this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "g");
 
     var that = this;
+
+    if (this.renderTransform) {
+      this.renderTransform.applyToPeer (this.host,
+					function (v) {
+					  that.updateTransform ();
+					});
+      this.renderTransform.computePropertyValue();
+    }
+
+
     this.renderPositionBinding = new Binding (function () {
-						peer.setAttributeNS (null, "transform",
-								     that.cachedTransform +
-								     "translate (" + that.renderPosition.x + ","
-								                   + that.renderPosition.y + ")");
+						that.updateTransform ();
 					      });
 
     if (this.background) {
-      var rect = document.createElementNS (FirelightConsts.SVGns, "rect");
-      this.background.applyToPeer (host, rect, "fill");
+      this.rectPeer = document.createElementNS (FirelightConsts.SVGns, "rect");
+      this.background.applyToPeer (this.host,
+				   function (v) {
+				     that.updateRectFill();
+				   });
+      this.background.computePropertyValue ();
 
       this.renderSizeBinding = new Binding (function () {
 					      // XXX these need an automatic binding so things update properly
-					      rect.setAttributeNS (null, "width", String(that.renderSize.width));
-					      rect.setAttributeNS (null, "height", String(that.renderSize.height));
+					      that.rectPeer.setAttributeNS (null, "width", String(that.renderSize.width));
+					      that.rectPeer.setAttributeNS (null, "height", String(that.renderSize.height));
 					    });
 
       this.renderSizeBinding.update ();
 
-      peer.appendChild(rect);
+      this.svgPeer.appendChild(this.rectPeer);
     }
 
     // XXX we need to bind children collection changes to regenerate the svg peers
     var children = this.children;
     for (var i = 0; i < children.count; i ++) {
       var child_peer = children.getItemAt (i).createPeer (host);
-      peer.appendChild (child_peer);
+      this.svgPeer.appendChild (child_peer);
     }
 
-    this.svgPeer = peer;
-    return peer;
+    // hook up any event triggers we might have
+    var triggers = this.triggers;
+    for (var t = 0; t < triggers.count; t ++) {
+      var trigger = triggers.getItemAt (t);
+      trigger.hookupTrigger (this, this.svgPeer);
+    }
+    return this.svgPeer;
   }
 });
 

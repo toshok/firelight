@@ -5,7 +5,7 @@ function TypesCtor () {
 	var o = Types;
 	for (var i = 0; i < nss.length; i ++) {
 	    if (!(nss[i] in o)) {
-//		console.log ("creating " + o + "." + nss[i]);
+//		Trace.debug ("creating " + o + "." + nss[i]);
 		o[nss[i]] = {};
 	    }
 	    o = o[nss[i]];
@@ -48,7 +48,7 @@ function XamlTypeResolverCtor () {
 	},
 
 	resolveQualifiedType: function (qualifiedTypeName) {
-//	    console.log ("resolveQualifiedType (" + qualifiedTypeName + ")");
+//	    Trace.debug ("resolveQualifiedType (" + qualifiedTypeName + ")");
 	    var dot = qualifiedTypeName.lastIndexOf('.');
 	    if (dot == -1) throw new Error ("you must specify a fully qualified type name");
 
@@ -88,6 +88,7 @@ var XamlTypeResolver = new XamlTypeResolverCtor();
 
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Controls");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Documents");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media.Animation");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Shapes");

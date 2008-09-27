@@ -1,15 +1,15 @@
 function ScaleTransform ()
 {
-    Transform.apply (this, arguments);
+  Transform.apply (this, arguments);
 }
 ScaleTransform.prototype = $.extend(new Transform(), {
-    toString: function () {
-	return "ScaleTransform";
-    },
+  toString: function () {
+    return "ScaleTransform";
+  },
 
-    computePropertyValue: function () {
-	return "scale(" + this.scaleX + "," + this.scaleY + ")";
-    }
+  computePropertyValue: function () {
+    return "scale(" + this.scaleX + "," + this.scaleY + ")";
+  }
 });
 Types.registerType ("System.Windows.Media", ScaleTransform);
 

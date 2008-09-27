@@ -6,7 +6,7 @@ function UIElement ()
 
 UIElement.prototype = $.extend(new DependencyObject(), {
   addEventListener: function (eventName, callback) {
-    console.log ("XXX addEventListener needs implementing");
+    Trace.debug ("XXX addEventListener needs implementing");
   },
 
   disconnectHost: function () {
@@ -46,7 +46,7 @@ UIElement.prototype = $.extend(new DependencyObject(), {
   },
 
   invalidateMeasure: function () {
-    console.log ("invalidateMeasure");
+    Trace.debug ("invalidateMeasure");
     if (this.host &&
       (this.visualParent || this.host.rootVisual == this)) {
       this.host.addMeasure (this);
@@ -54,7 +54,7 @@ UIElement.prototype = $.extend(new DependencyObject(), {
   },
 
   invalidateArrange: function () {
-    console.log ("invalidateArrange");
+    Trace.debug ("invalidateArrange");
     if (this.host &&
       (this.visualParent || this.host.rootVisual == this)) {
       this.host.addArrange (this);

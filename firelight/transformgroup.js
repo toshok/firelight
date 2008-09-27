@@ -1,33 +1,33 @@
 function TransformGroup ()
 {
-    Transform.apply (this, arguments);
+  Transform.apply (this, arguments);
 }
 TransformGroup.prototype = $.extend(new Transform(), {
 
-    contentProperty: "Children",
+  contentProperty: "Children",
 
-    toString: function () {
-	return "TransformGroup";
-    },
+  toString: function () {
+    return "TransformGroup";
+  },
 
-    applyToPeer: function (host, peer, property) {
-	var that = this;
+  applyToPeer: function (host, callback) {
+    var that = this;
 
-	this.children.addCollectionChangeHandler (function (args) {
-	    that.appliedToPeer.setAttributeNS (null, "transform", that.computePropertyValue());
-	});
+    this.children.addCollectionChangeHandler (function (args) {
+						that.computePropertyValue();
+					      });
 
-	Transform.prototype.applyToPeer.apply (this, arguments);
-    },
+    Transform.prototype.applyToPeer.apply (this, arguments);
+  },
 
-    computePropertyValue: function () {
-	var str = "";
-	var children = this.children;
-	for (var i = 0; i < children.count; i ++)
-	    str += children.getItemAt (i).computePropertyValue();
+  computePropertyValue: function () {
+    var str = "";
+    var children = this.children;
+    for (var i = 0; i < children.count; i ++)
+      str += children.getItemAt (i).computePropertyValue();
 
-	return str;
-    }
+    this.svgPropertyValue = str;
+  }
 });
 
 Types.registerType ("System.Windows.Media", TransformGroup);

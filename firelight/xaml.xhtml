@@ -19,22 +19,39 @@
 //                                                                                function(sender, args) { alert ("button down!"); });
 
                                       host.setRootVisual (root);
-				      setTimeout (moveRect, 50);
+				      setTimeout (animate, 10);
                                   });
 	});
 
-	function moveRect () {
-		 var endpoint = 500;
-		 var tickAmount = 5;
-		 var tickTime = 50;
+	function animate () {
+		 var translate_endpoint = 500;
+		 var translate_tickAmount = 5;
 		 var rect = rootVisual.children.getItemAt(0);
-		 function moveRectTimeout () {
-		 	  if (Canvas.getLeft (rect) < endpoint) {
-			     Canvas.setLeft (rect, Canvas.getLeft (rect) + tickAmount);
-			     setTimeout (moveRectTimeout, tickTime);
+		 var tickTime = 50;
+
+		 var rotate = rootVisual.findName("rotate");
+		 var rotate_tickAmount = 5;
+		 var rotate_endpoint = 360;
+
+		 function animateTimeout () {
+		 	  var need_timeout = false;
+
+		 	  // translate
+		 	  if (Canvas.getLeft (rect) < translate_endpoint) {
+			     need_timeout = true;
+			     Canvas.setLeft (rect, Canvas.getLeft (rect) + translate_tickAmount);
 			  }
+
+			  // rotate
+			  if (rotate.angle < rotate_endpoint) {
+			     need_timeout = true;
+			     rotate.angle += rotate_tickAmount;
+			  }
+
+			  if (need_timeout)
+			    setTimeout (animateTimeout, tickTime);
 		 }
-		 setTimeout (moveRectTimeout, tickTime);
+		 setTimeout (animateTimeout, tickTime);
 	}
       ]]>
     </script>

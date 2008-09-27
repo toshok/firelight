@@ -13,6 +13,7 @@ JS_SOURCES=	consts.js			\
 		xamlreader.js			\
 		dependencyproperty.js		\
 		dependencyobject.js		\
+		namescope.js			\
 		collection.js			\
 		triggeractioncollection.js	\
 		eventtrigger.js			\
@@ -35,6 +36,11 @@ JS_SOURCES=	consts.js			\
 		lineargradientbrush.js		\
 		uielementcollection.js		\
 		gradientstopcollection.js	\
+		inline.js			\
+		linebreak.js			\
+		run.js				\
+		inlinecollection.js		\
+		textblock.js			\
 		panel.js			\
 		canvas.js			\
 		shape.js			\
@@ -47,6 +53,7 @@ JS_SOURCES=	consts.js			\
 		animationmanager.js		\
 		layoutinformation.js		\
 		layoutmanager.js		\
+		setter.js			\
 		svghost.js
 
 $(TARGET_DEBUG)-stamp: $(JS_SOURCES)

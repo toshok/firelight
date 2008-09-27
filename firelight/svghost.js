@@ -59,7 +59,7 @@ SvgHost.prototype = {
   startClock: function () {
     if (this.intervalId == null) {
       var that = this;
-      console.log ("starting clock");
+      Trace.debug ("starting clock");
       this.intervalId = setInterval (function () { that.globalClockTick (); }, this.globalTick);
     }
   },
@@ -72,7 +72,7 @@ SvgHost.prototype = {
   },
 
   globalClockTick: function () {
-    console.log ("global clock ticking");
+    Trace.debug ("global clock ticking");
     this.animationManager.processAnimations ();
     this.layoutManager.processPendingMeasureAndArrange ();
     this.maybeStopClock ();
@@ -110,7 +110,7 @@ SvgHost.prototype = {
     if (this.intervalId != -1 &&
 	!this.layoutManager.needClock() &&
 	!this.animationManager.needClock()){
-      console.log ("stopping global clock");
+      Trace.debug ("stopping global clock");
       this.stopClock ();
     }
   }

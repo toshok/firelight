@@ -15,56 +15,85 @@ Collection.prototype = $.extend(new DependencyObject(), {
 	this.changeHandlers.push (handler);
     },
 
-    // XXX removeCollectionChangeHandler plz
+    removeCollectionChangeHandler: function (handler) {
+      for (var i = 0; i < this.changeHandlersHandlers.length; i ++) {
+	if (this.changeHandlers[i] == handler) {
+	  this.changeHandlers.remove (i);
+	  break;
+	}
+      }
+    },
 
     addItem: function (item) {
-	var index = this.items.length;
-	this.items.push (item);
-	this.setValue (Collection.prototype.CountProperty, index + 1);
-	this.notifyChangeHandlers ({ type: "add",
-				     index: index,
-				     newItem: item });
+      var index = this.items.length;
 
-	if (item.addPropertyChangeListener) {
-	    var that = this;
-	    item.addPropertyChangeListener (null, function (args) {
-		that.notifyChangeHandlers ({ type: "itemChange",
-					     item: item,
-					     args: args });
-	    });
-	}
+      var handler = null;
+      if (item.addPropertyChangeListener) {
+	var that = this;
+	handler = function (args) {
+	  that.notifyChangeHandlers ({ type: "itemChange",
+				       item: item,
+				       args: args });
+	};
+
+	item.addPropertyChangeListener (null, handler);
+      }
+
+      this.items.push ({ obj: item, changeHandler: handler });
+
+      this.setValue (Collection.CountProperty, index + 1);
+      this.notifyChangeHandlers ({ type: "add",
+				   index: index,
+				   newItem: item });
+    },
+
+    clear: function  () {
+      for (var i = 0; i < this.items.length; i ++) {
+	if (this.items[i].handler)
+	  this.items[i].obj.removePropertyChangeListener (null, this.items[i].handler);
+      }
+
+      this.notifyChangeHandlers ({ type: "clearing" });
+
+      // XXX more here?
+      this.items = [];
     },
 
     removeItem: function (item) {
-	throw new Error ("not implemented yet");
+      throw new Error ("not implemented yet");
     },
 
     removeItemAt: function (index) {
-	throw new Error ("not implemented yet");
+      throw new Error ("not implemented yet");
     },
 
     getItemAt: function (index) {
-	return this.items[index];
+	return this.items[index].obj;
     },
 
     setItemAt: function (index, item) {
-	var old_item = this.items[index];
-	this.items[index] = item;
-	this.notifyChangeHandlers ({ type: "change",
-				     index: index,
-				     oldItem: old_item,
-				     newItem: item });
+      var old_item = this.items[index];
 
-	// XXX remove the old change handler
+	if (old_item.handler)
+	  old_items.obj.removePropertyChangeListener (null, old_items.handler);
 
-	if (item.addPropertyChangeListener) {
-	    var that = this;
-	    item.addPropertyChangeListener (null, function (args) {
-		that.notifyChangeHandlers ({ type: "itemChange",
-					     item: item,
-				             args: args });
-	    });
-	}
+      var handler = null;
+      if (item.addPropertyChangeListener) {
+	var that = this;
+	handler = function (args) {
+	  that.notifyChangeHandlers ({ type: "itemChange",
+				       item: item,
+				       args: args });
+	};
+
+	item.addPropertyChangeListener (null, handler);
+      }
+
+      this.items[index] = { obj: item, handler: handler };
+      this.notifyChangeHandlers ({ type: "change",
+				   index: index,
+				   oldItem: old_item.obj,
+				   newItem: item });
     },
 
     notifyChangeHandlers: function (args) {

@@ -3,7 +3,7 @@ var XamlReader = {
   loadFromUrl: function (url, callback) {
     jQuery.get (url, {},
 		function (data, textStatus) {
-		  console.log ("dataLoaded, textStatus = " + textStatus + ", data = " + data);
+		  Trace.debug ("dataLoaded, textStatus = " + textStatus + ", data = " + data);
 		  callback (XamlReader.loadFromNode (data.documentElement));
 		}, "xml");
   },
@@ -13,12 +13,15 @@ var XamlReader = {
   },
 
   loadFromNode: function (xmlNode) {
-    return this.createElementFromXmlNode (xmlNode);
+    var namescope = new NameScope();
+    var rv = this.createElementFromXmlNode (xmlNode, namescope, true);
+
+    return rv;
   },
 
-  createElementFromXmlNode: function (xmlNode) {
+  createElementFromXmlNode: function (xmlNode, namescope, top) {
 
-    console.log ("creating xaml node from xml node " + xmlNode.nodeName);
+    Trace.debug ("creating xaml node from xml node " + xmlNode.nodeName);
 
     // first figure out the correct type for the node
     if (xmlNode.localName.indexOf ('.') != -1)
@@ -40,13 +43,17 @@ var XamlReader = {
     }
 
     // deal with x:Name here
-    var nodeName = xmlNode.getAttributeNodeNS (FirelightConsts.XAMLxns, "Name");
-    if (nodeName)
-      nodeName = nodeName.value;
 
     var node = new nodeType();
 
-    if (nodeName) node.name = nodeName;
+    if (top)
+      NameScope.setNameScope (node, namescope);
+
+    var nodeName = xmlNode.getAttributeNodeNS (FirelightConsts.XAMLxns, "Name");
+    if (nodeName) {
+      node.name = nodeName.value;
+      namescope.registerName (node.name, node);
+    }
 
     // iterate over the all the attribute nodes
     for (var a = 0; a < xmlNode.attributes.length; a++) {
@@ -69,7 +76,7 @@ var XamlReader = {
       if (dot != -1) {
 	// it's an attached property, we need to look it up on the class mentioned in the nodeName.
 	var attached_className = attr.nodeName.substring (0, dot);
-	console.log ("attached property.  className = " + attached_className);
+	Trace.debug ("attached property.  className = " + attached_className);
 
 	var attached_nodeType = XamlTypeResolver.resolveType (attached_className, xmlNode.namespaceURI);
 
@@ -94,10 +101,10 @@ var XamlReader = {
 
     // now iterate over each one of the children of this node
     // recursively
-    console.log (xmlNode.nodeName + " children = " + xmlNode.childNodes.length);
+    Trace.debug (xmlNode.nodeName + " children = " + xmlNode.childNodes.length);
     var i = 0;
     for (var n = xmlNode.firstChild; n; n = n.nextSibling) {
-      console.log (xmlNode.nodeName + " child[" + i + "] = " + n.nodeName);
+      Trace.debug (xmlNode.nodeName + " child[" + i + "] = " + n.nodeName);
       i++;
       if (n.nodeName == "#comment") {
 	// ignore
@@ -106,10 +113,10 @@ var XamlReader = {
 	// handle text someplace else
       }
       else {
-	//console.log ("child element " + n.nodeName);
+	//Trace.debug ("child element " + n.nodeName);
 	var dot = n.nodeName.indexOf ('.');
 	if (dot != -1) {
-	  //console.log ("    property element");
+	  //Trace.debug ("    property element");
 	  // it's a property element.
 
 	  var propertyName = n.localName.substring (dot+1);
@@ -134,7 +141,7 @@ var XamlReader = {
 	      if (!more_children_allowed)
 		throw new Error ("Non-collection property '" + dp + "' cannot have more than one child node");
 
-	      var propertyNode = this.createElementFromXmlNode (pn);
+	      var propertyNode = this.createElementFromXmlNode (pn, namescope, false);
 
 	      if (!collection || dp.resolvePropertyType() == propertyNode.__proto__) {
 		node.setValue (dp, propertyNode);
@@ -148,9 +155,9 @@ var XamlReader = {
 	  }
 	}
 	else {
-	  console.log ("    child element " + n.nodeName);
+	  Trace.debug ("    child element " + n.nodeName);
 	  // it's a child element
-	  var childNode = this.createElementFromXmlNode (n);
+	  var childNode = this.createElementFromXmlNode (n, namescope, false);
 	  node.addChild (childNode);
 	}
       }

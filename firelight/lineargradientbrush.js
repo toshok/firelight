@@ -1,24 +1,24 @@
 function LinearGradientBrush ()
 {
-    GradientBrush.apply (this, []);
+  GradientBrush.apply (this, arguments);
 }
 
 LinearGradientBrush.prototype = $.extend(new GradientBrush(), {
-    svgGradientElement: "linearGradient",
+  svgGradientElement: "linearGradient",
 
-    toString: function () {
-	return "LinearGradientBrush";
-    },
+  toString: function () {
+    return "LinearGradientBrush";
+  },
 
-    computePropertyValue: function () {
+  computePropertyValue: function () {
 
-	this.gradientDef.setAttributeNS (null, "x1", this.startPoint.x);
-	this.gradientDef.setAttributeNS (null, "y1", this.startPoint.y);
-	this.gradientDef.setAttributeNS (null, "x2", this.endPoint.x);
-	this.gradientDef.setAttributeNS (null, "y2", this.endPoint.y);
+    this.gradientDef.setAttributeNS (null, "x1", this.startPoint.x);
+    this.gradientDef.setAttributeNS (null, "y1", this.startPoint.y);
+    this.gradientDef.setAttributeNS (null, "x2", this.endPoint.x);
+    this.gradientDef.setAttributeNS (null, "y2", this.endPoint.y);
 
-	return GradientBrush.prototype.computePropertyValue.apply (this, arguments);
-    }
+    GradientBrush.prototype.computePropertyValue.apply (this, arguments);
+  }
 
 });
 

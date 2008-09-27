@@ -7,8 +7,25 @@ function FrameworkElement ()
 }
 
 FrameworkElement.prototype = $.extend(new UIElement(), {
+  findName : function (name) {
+    // look up the visual (XXX should be logical) tree for an element
+    // with a namescope
+    var ns_obj = this;
+    var ns = null;
+    while (ns_obj) {
+      if ((ns = NameScope.getNameScope (ns_obj)))
+	break;
+      ns_obj = ns_obj.getVisualParent();
+    }
+    if (!ns)
+      return null;
+    return ns.findName (name);
+  },
+
+
+
   onPropertyChanged: function (args) {
-    console.log ("in FrameworkElement.onPropertyChanged");
+    Trace.debug ("in FrameworkElement.onPropertyChanged");
     if (args.property.affectsMeasure)
       this.invalidateMeasure ();
     if (args.property.affectsArrange)
@@ -20,7 +37,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
   },
 
   measureOverride: function (availableSize) {
-    console.log ("in FrameworkElement.measureOverride");
+    Trace.debug ("in FrameworkElement.measureOverride");
 
     if (!this.getVisualParent() || this.getVisualParent() instanceof Canvas)
       return new Size (NaN, NaN);
@@ -29,9 +46,9 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
   },
 
   arrangeOverride: function (finalSize) {
-    console.log ("in FrameworkElement.arrangeOverride (" + this.name + ")");
+    Trace.debug ("in FrameworkElement.arrangeOverride (" + this.name + ")");
 //    if (!this.getVisualParent () || this.getVisualParent () instanceof Canvas) {
-//      console.log ("ugly canvas hack");
+//      Trace.debug ("ugly canvas hack");
 //      return new Size (NaN,NaN);
 //    }
 
@@ -39,7 +56,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 
     var specified = new Size (this.width, this.height);
 
-    console.log ("size = " + finalSize + ", specified = " + specified);
+    Trace.debug ("size = " + finalSize + ", specified = " + specified);
 
     // postcondition the results
     size = size.min (specified);
@@ -61,7 +78,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
   measure: function (availableSize) {
     var specified = new Size (this.width, this.height);
 
-    console.log ("measure on " + this.name + ", specified size = " + specified);
+    Trace.debug ("measure on " + this.name + ", specified size = " + specified);
 
     var size = availableSize.shrinkBy (this.margin);
 
@@ -100,7 +117,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 		   new Rect (finalRect.left, finalRect.top, finalRect.width, finalRect.height));
 
     var specified = new Size (this.width, this.height);
-    console.log ("measure on " + this.name + ", specified size = " + specified);
+    Trace.debug ("measure on " + this.name + ", specified size = " + specified);
 
     finalRect.shrinkBy (this.margin);
 
@@ -126,10 +143,10 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
     this.renderPosition = new Point (finalRect.left, finalRect.top);
     if (this.renderPositionBinding)
       this.renderPositionBinding.update ();
-    console.log (this.name + " renderSize = " + this.renderSize);
+    Trace.debug (this.name + " renderSize = " + this.renderSize);
 
-    //console.log ("more here in FrameworkElement::Arrange.  move the bounds or something?  set properties?  who knows!?");
-    }
+    //Trace.debug ("more here in FrameworkElement::Arrange.  move the bounds or something?  set properties?  who knows!?");
+  }
 });
 
 DependencyProperties.register (FrameworkElement, "Width",

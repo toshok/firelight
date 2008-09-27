@@ -17,7 +17,7 @@ function coerceValueToBrush (v)
     return new SolidColorBrush (v);
   }
   else {
-    console.log ("FIXME: returning object unmolested in coerceValueToBrush");
+    Trace.error ("FIXME: returning object unmolested in coerceValueToBrush");
     return v;
   }
   //throw "value '" + v + "' is invalid for this property";
@@ -27,7 +27,7 @@ function coerceValueToPoint (v)
 {
   if (typeof (v) == "string") {
     var ps = v.split (',');
-    console.log ("creating new Point (" + ps[0] + ", " + ps[1] + ")");
+    Trace.debug ("creating new Point (" + ps[0] + ", " + ps[1] + ")");
     return new Point (ps[0], ps[1]);
   }
   else if (typeof (v.x) == "number" &&

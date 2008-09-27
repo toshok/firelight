@@ -22,7 +22,7 @@ DependencyProperties.register (Timeline, "FillBehavior",
 				 coerceValue: coerceValueToFillBehavior });
 
 DependencyProperties.register (Timeline, "RepeatBehavior",
-			       { propertyType: String,
+			       { propertyType: String
 				 /*XXX validateValue: validateRepeatBehavior*/ });
 
 DependencyProperties.register (Timeline, "SpeedRatio",

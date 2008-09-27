@@ -1,15 +1,15 @@
 function SolidColorBrush (color)
 {
-    Brush.apply (this, []);
+  Brush.apply (this, []);
 
-    if (typeof (color) != "undefined")
-	this.color = color;
+  if (typeof (color) != "undefined")
+    this.color = color;
 }
 
 SolidColorBrush.prototype = $.extend(new Brush(), {
-    computePropertyValue: function () {
-	return this.color;
-    }
+  computePropertyValue: function () {
+    this.svgPropertyValue = this.color;
+  }
 });
 
 DependencyProperties.register (SolidColorBrush, "Color",

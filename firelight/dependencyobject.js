@@ -13,17 +13,17 @@ DependencyObject.prototype = $.extend(new Object(), {
       throw new Error ("setValue requires valid DependencyProperty");
 
     if (typeof new_value == "undefined")
-      throw new Error ("setValue(" + dp.key + ") passed an undefined value");
+      throw new Error ("setValue(" + dp + ") passed an undefined value");
 
     //if (dp.readonly) throw new "Attempting to set a value on read-only property '" + dp.name + "'";
-    var old_value = this.properties[dp.key];
+    var old_value = this.properties[dp];
 
     var propertyType = dp.resolvePropertyType ();
-    if (!propertyType) throw "unable to resolve property type for " + dp.key;
+    if (!propertyType) throw "unable to resolve property type for " + dp;
     if (propertyType == String) {
       if (typeof (new_value) != "string")
-	throw "property " + dp.key + " requires a string value";
-      this.properties[dp.key] = new_value;
+	throw "property " + dp + " requires a string value";
+      this.properties[dp] = new_value;
     }
     else if (propertyType == Number) {
       /* be nice and try to automatically convert strings to numbers */
@@ -31,24 +31,26 @@ DependencyObject.prototype = $.extend(new Object(), {
 	var s = new_value;
 	new_value = Number (new_value);
 	if (isNaN(new_value) && s != "NaN")
-	  throw "property " + dp.key + " requires a number value";
+	  throw "property " + dp + " requires a number value";
       }
       if (typeof (new_value) != "number")
-	throw "property " + dp.key + " requires a number value";
-      this.properties[dp.key] = new_value;
+	throw "property " + dp + " requires a number value";
+      this.properties[dp] = new_value;
     }
     else if (new_value.isSubclass && new_value.isSubclass (propertyType))
-      this.properties[dp.key] = new_value;
+      this.properties[dp] = new_value;
     else if (dp.metadata && dp.metadata.coerceValue) {
-      this.properties[dp.key] = dp.metadata.coerceValue (new_value);
+      this.properties[dp] = dp.metadata.coerceValue (new_value);
     }
     else if (propertyType.prototype.coerceValueToType) {
-      this.properties[dp.key] = propertyType.prototype.coerceValueToType (new_value);
+      this.properties[dp] = propertyType.prototype.coerceValueToType (new_value);
     }
     else
-      throw new Error ("DependencyProperty '" + dp.key + "' lacks a coerceValue method, and value '" + new_value + "' is not the registered type.");
+      // XXX punt here, not sure how to deal with opera's lack of __proto__ and therefore failure of isSubclass.
+      // throw new Error ("DependencyProperty '" + dp + "' lacks a coerceValue method, and value '" + new_value + "' is not the registered type.");
+      this.properties[dp] = new_value;
 
-    if (old_value != new_value) {
+    if (old_value != new_value || (dp.metadata && dp.metadata.alwaysNotify)) {
       var args = { "property" : dp,
 		   oldValue: old_value,
 		   newValue: new_value };
@@ -61,25 +63,25 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   getValue: function (dp) {
-    if (!(dp.key in this.properties)) {
+    if (!(dp in this.properties)) {
       if (dp.metadata) {
 	if (typeof (dp.metadata.defaultValue) == "undefined")
-	  this.properties[dp.key] = null;
+	  this.properties[dp] = null;
 	else
-	  this.properties[dp.key] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
+	  this.properties[dp] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
       }
       else
-	this.properties[dp.key] = null;
+	this.properties[dp] = null;
     }
 
-    return this.properties[dp.key];
+    return this.properties[dp];
   },
 
   isSubclass: function (type) {
     var type_proto = type.prototype;
     var proto = this.__proto__;
     while (proto) {
-      console.log ("isSubclass (" + proto + ", " + type.prototype + ")");
+//      Trace.debug ("isSubclass (" + proto + ", " + type.prototype + ")");
       if (proto == type_proto)
 	return true;
       proto = proto.__proto__;
@@ -91,23 +93,33 @@ DependencyObject.prototype = $.extend(new Object(), {
     if (dp == null)
       this.wildcard_listeners.push (cb);
       else {
-	if (this.propertychange_listeners[dp.key] == null)
-	  this.propertychange_listeners[dp.key] = [];
-	  this.propertychange_listeners[dp.key].push (cb);
+	if (this.propertychange_listeners[dp] == null)
+	  this.propertychange_listeners[dp] = [];
+	  this.propertychange_listeners[dp].push (cb);
       }
   },
 
-  lookupProperty: function (dpName) {
-    var p = this.__proto__;
-    dpName = dpName + "Property";
-
-    while (p) {
-      if (dpName in p)
-	return p[dpName];
-
-      p = p.__proto__;
+  removePropertyChangeListener: function (dp, cb) {
+    if (dp == null) {
+      for (var i = 0; i < this.wildcard_listeners.length; i ++) {
+	if (this.wildcard_listeners[i] == cb) {
+	  this.wildcard_listeners.remove (i);
+	  break;
+	}
+      }
     }
-    return null;
+    else if (this.propertychange_listeners[dp] != null) {
+      for (var i = 0; i < this.propertychange_listeners[dp].length; i ++) {
+	if ((this.propertychange_listeners[dp])[i] == cb) {
+	  this.propertychange_listeners[dp].remove (i);
+	  break;
+	}
+      }
+    }
+  },
+
+  lookupProperty: function (dpName) {
+    return this[dpName + "Property"];
   },
 
   addChild: function (child) {
@@ -130,7 +142,7 @@ DependencyObject.prototype = $.extend(new Object(), {
       content.addItem(child);
     }
     else {
-      console.log ("setting contentProp " + contentProp);
+      Trace.debug ("setting contentProp " + contentProp);
       this.setValue (contentProp, child);
     }
   },
@@ -152,17 +164,22 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   notifyListenersOfPropertyChange: function (args) {
-    this.notifyListenerList (this.propertychange_listeners[args.property.key], args);
+    this.notifyListenerList (this.propertychange_listeners[args.property], args);
     this.notifyListenerList (this.wildcard_listeners, args);
   },
 
-  applyToPeer: function (host, peer, property) {
+  applyToPeer: function (host, change_callback) {
     console.log ("in dependencyobject.applyToPeer");
-    this.appliedToPeer = peer;
-    this.appliedToProperty = property;
 
-    console.log ("setting " + property + " to " + this.computePropertyValue());
-    peer.setAttributeNS (null, property, this.computePropertyValue());
+    var valueProp = this.lookupProperty ("SvgPropertyValue");
+
+    console.log (valueProp);
+
+    var that = this;
+    this.addPropertyChangeListener (valueProp,
+				    function (args) {
+				      change_callback (that.getValue (valueProp));
+				    });
 
     // XXX property changes need to be propagated still.
   },

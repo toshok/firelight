@@ -1,116 +1,119 @@
 var DependencyProperties = {
 
-    registerAttached: function (ownerType, name, metadata) {
-	var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, true, metadata);
+  registerAttached: function (ownerType, name, metadata) {
+    var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, true, metadata);
 
-	this.registerDependencyProperty (prop);
+    this.registerDependencyProperty (prop);
 
-	this.defineAccessors (prop);
+    this.defineAccessors (prop);
 
-	return prop;
-    },
+    return prop;
+  },
 
-    register: function (ownerType, name, metadata) {
+  register: function (ownerType, name, metadata) {
 
-	var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, false, metadata);
+    var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, false, metadata);
 
-	this.registerDependencyProperty (prop);
+    this.registerDependencyProperty (prop);
 
-	this.defineAccessors (prop);
+    this.defineAccessors (prop);
 
-	return prop;
-    },
+    return prop;
+  },
 
 
 
-    /////////////////
-    // private stuff
-    dependency_properties: {},
+  /////////////////
+  // private stuff
+  dependency_properties: {},
 
-    getKey: function (ownerType, name) {
-	var typeName = ownerType.name;
+  getKey: function (ownerType, name) {
+    var typeName = ownerType.name;
 
-	if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
+    if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
 
-	return typeName + "." + name;
-    },
+    return typeName + "." + name;
+  },
 
-    defineAccessors: function (prop) {
-	// define the XXXProperty getter on the ownerType
-	prop.ownerType.prototype.__defineGetter__ (prop.name + "Property", function () { return prop; });
-	// and a setter that just throws an exception
-	prop.ownerType.prototype.__defineSetter__ (prop.name + "Property", function (val) { throw "You can't overwrite a registered DependencyProperty"; });
+  defineAccessors: function (prop) {
+    // define the XXXProperty getter on the ownerType
+    prop.ownerType.prototype.__defineGetter__ (prop.name + "Property", function () { return prop; });
+    // and a setter that just throws an exception
+    prop.ownerType.prototype.__defineSetter__ (prop.name + "Property", function (val) { throw "You can't overwrite a registered DependencyProperty"; });
+    // now put a convenient getter on the constructor so we don't have
+    // to put '.prototype' in all references to the DP
+    prop.ownerType.__defineGetter__ (prop.name + "Property", function () { return prop; });
 
-	if (prop.attached) {
-	    prop.ownerType["get" + prop.name] = function (obj) { return obj.getValue (prop) };
-	    if (!prop.metadata || !prop.metadata.readOnly)
-		prop.ownerType["set" + prop.name] = function (obj, v) { obj.setValue (prop, v); };
-	}
-	else {
-	    var downcasedName = prop.name[0].toLowerCase() + prop.name.substring(1);
-	    prop.ownerType.prototype.__defineGetter__ (downcasedName, function () { return this.getValue (prop); });
-	    if (!prop.metadata || !prop.metadata.readOnly)
-		prop.ownerType.prototype.__defineSetter__ (downcasedName, function (val) { return this.setValue (prop, val); });
-	}
-    },
+    if (prop.attached) {
+      prop.ownerType["get" + prop.name] = function (obj) { return obj.getValue (prop); };
+      if (!prop.metadata || !prop.metadata.readOnly)
+	prop.ownerType["set" + prop.name] = function (obj, v) { obj.setValue (prop, v); };
+      }
+      else {
+	var downcasedName = prop.name[0].toLowerCase() + prop.name.substring(1);
+	prop.ownerType.prototype.__defineGetter__ (downcasedName, function () { return this.getValue (prop); });
+	if (!prop.metadata || !prop.metadata.readOnly)
+	  prop.ownerType.prototype.__defineSetter__ (downcasedName, function (val) { return this.setValue (prop, val); });
+      }
+  },
 
-    registerDependencyProperty: function (dp) {
+  registerDependencyProperty: function (dp) {
 
-	if (this.dependency_properties [ dp.key ] != null) throw ("DependencyProperty " + dp.key + " already registered");
+    if (this.dependency_properties [ dp.key ] != null) throw ("DependencyProperty " + dp.key + " already registered");
 
-	this.dependency_properties [ dp.key ] = dp;
-    }
+    this.dependency_properties [ dp.key ] = dp;
+  }
 };
 
 function DependencyProperty (key, ownerType, name, attached, metadata) {
-    this.key = key;
-    this.name = name;
-    this.ownerType = ownerType;
-    this.attached = attached;
-    this.metadata = metadata || null;
+  this.key = key;
+  this.name = name;
+  this.ownerType = ownerType;
+  this.attached = attached;
+  this.metadata = metadata || null;
 }
 
 DependencyProperty.prototype = $.extend (new Object(), {
-	resolvePropertyType: function () {
-	    if ("propertyType" in this)
-		return this.propertyType;
+  resolvePropertyType: function () {
+    if ("propertyType" in this)
+      return this.propertyType;
 
-	    if (this.metadata) {
-		if (this.metadata.propertyType) {
-		    this.propertyType = this.metadata.propertyType;
-		}
-		else if ("defaultValue" in this.metadata) {
-		    var v;
-		    if (typeof (this.metadata.defaultValue) == "function")
-			v = this.metadata.defaultValue ();
-		    else
-			v = this.metadata.defaultValue;
+    if (this.metadata) {
+      if (this.metadata.propertyType) {
+	this.propertyType = this.metadata.propertyType;
+      }
+      else if ("defaultValue" in this.metadata) {
+	var v;
+	if (typeof (this.metadata.defaultValue) == "function")
+	  v = this.metadata.defaultValue ();
+	else
+	  v = this.metadata.defaultValue;
 
-		    var tof = typeof (v);
-		    if (tof == "string")
-			this.propertyType = String;
-		    else if (tof == "number")
-			this.propertyType = Number;
-		    else if (typeof (this.propertyType) == "function") {
-			if ("type" in v)
-			    this.propertyType = v.type;
-			else
-			    throw new Error ("can't determine propertyType using defaultValue of " + this.key);
-		    }
-		    else {
-		      throw new Error ("unrecognized property type for DependencyProperty " + this.key);
-		    }
-		}
-		else {
-		    this.propertyType = null;
-		}
-	    }
+	var tof = typeof (v);
+	if (tof == "string")
+	  this.propertyType = String;
+	else if (tof == "number")
+	  this.propertyType = Number;
+	else if (typeof (this.propertyType) == "function") {
+	  if ("type" in v)
+	    this.propertyType = v.type;
+	  else
+	    throw new Error ("can't determine propertyType using defaultValue of " + this.key);
+	}
+	else {
+	  throw new Error ("unrecognized property type for DependencyProperty " + this.key);
+	}
+      }
+      else {
+	this.propertyType = null;
+      }
+    }
 
-	    return this.propertyType;
-	},
+    return this.propertyType;
+  },
 
-	toString: function () {
-	    return "DependencyProperty: " + this.ownerType.name + "." + this.name + "";
-	},
+  toString: function () {
+    return "DependencyProperty: " + this.ownerType.name + "." + this.name + "";
+  }
 });
 

@@ -2,10 +2,10 @@ function LayoutManager () {
   var priority_levels = [];
 
   function ensurePriorityLevels (c) {
-    console.log ("ensurePriorityLevels(" + c + ")");
+//    Trace.debug ("ensurePriorityLevels(" + c + ")");
 
     if (c < priority_levels.length) {
-      console.log ("we're already big enough");
+//      Trace.debug ("we're already big enough");
       return;
     }
 
@@ -16,7 +16,7 @@ function LayoutManager () {
   }
 
   function findElement (fwe) {
-    console.log ("findElement");
+//    Trace.debug ("findElement");
     var level = priority_levels[fwe.visualLevel];
     for (var i = 0; i < level.length; i ++)
       if (level[i].element == fwe)
@@ -50,26 +50,26 @@ function LayoutManager () {
   };
 
   this.needClock = function (tl) {
-    console.log ("layout manager needs clock?");
+//    Trace.debug ("layout manager needs clock?");
     for (var i = 0; i < priority_levels.length; i ++) {
-      console.log ("priority_level[" + i + "] = " + priority_levels[i]);
+//      Trace.debug ("priority_level[" + i + "] = " + priority_levels[i]);
       if (priority_levels[i].length > 0)
 	return true;
     }
 
-    console.log ("returning false");
+//    Trace.debug ("returning false");
     return false;
   };
 
   this.processPendingMeasureAndArrange = function () {
-    console.log ("processPendingMeasureAndArrange");
+//    Trace.debug ("processPendingMeasureAndArrange");
     for (var i = 0; i < priority_levels.length; i ++) {
-      console.log ("handling level " + i);
+//      Trace.debug ("handling level " + i);
       while (priority_levels[i].length) {
 	var l = priority_levels[i][0];
 
-	console.log ("l.element = " + l.element);
-	var slot = l.element.getValue(LayoutInformation.prototype.LayoutSlotProperty);
+//	Trace.debug ("l.element = " + l.element);
+	var slot = l.element.getValue(LayoutInformation.LayoutSlotProperty);
 
 	if (!slot)
 	  throw new Error ("can't layout out an element that doesn't have a LayoutSlot property");
@@ -85,3 +85,4 @@ function LayoutManager () {
     }
   };
 }
+
