@@ -7,6 +7,23 @@ if (typeof (window.console) == "undefined") {
     window.console = console;
 }
 
+var Trace = {
+  DEBUG: 1,
+  ERROR: 2,
+
+  level: 0,
+
+  debug: function (str) {
+    if (this.level & this.DEBUG)
+      console.log ("DEBUG: " + str);
+  },
+
+  error: function (str) {
+    if (this.level & this.ERROR)
+      console.log ("ERROR: " + str);
+  }
+};
+
 /* the next two methods (printStackTrace and logExceptions) come from
    http://blog.redinnovation.com/2008/08/19/catching-silent-javascript-exceptions-with-a-function-decorator/
 */
@@ -16,13 +33,13 @@ function printStackTrace(e) {
     if (e.fileName) {
 	msg += " at " + e.fileName + ":" + e.lineNumber;
     }
-    console.log(msg);
+    Trace.error (msg);
 
     if (e.stack) {
 	// Extract Firefox stack information. This tells how you ended up
 	// to the exception in the first place. I didn't find
 	// instructions how to parse this stuff.
-	console.log(e.stack);
+	Trace.error (e.stack);
     }
 }
 
