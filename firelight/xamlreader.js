@@ -133,6 +133,10 @@ var XamlReader = {
 			      ? dp.resolvePropertyType().prototype.isSubclass (Collection)
 			      : false;
 
+	  var resources =  dp.resolvePropertyType().prototype.isSubclass
+			      ? dp.resolvePropertyType().prototype.isSubclass (ResourceDictionary)
+			      : false;
+
 	  var more_children_allowed = true;
 	  var pn = n.firstChild;
 	  while (pn) {

@@ -17,6 +17,10 @@ Run.prototype = $.extend(new Inline(), {
 
     this.svgPeer.appendChild (textNode);
 
+    this.svgPeer.setAttributeNS (null, "font-family", this.fontFamily);
+    this.svgPeer.setAttributeNS (null, "font-size", this.fontSize);
+    this.svgPeer.setAttributeNS (null, "font-weight", this.fontWeight);
+
     return this.svgPeer;
   }
 });

@@ -6,6 +6,12 @@ function BeginStoryboard ()
 BeginStoryboard.prototype = $.extend(new DependencyObject(), {
   contentProperty: "Storyboard",
 
+  performAction: function () {
+    var storyboard = this.storyboard;
+    if (storyboard)
+      storyboard.start();
+  },
+
   toString: function () {
     return "BeginStoryboard";
   }

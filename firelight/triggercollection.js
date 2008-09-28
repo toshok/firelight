@@ -4,6 +4,10 @@ function TriggerCollection ()
 }
 
 TriggerCollection.prototype = $.extend(new Collection(), {
+  getLogicalChildren: function () {
+    return this;
+  },
+
   toString: function () {
     return "TriggerCollection";
   }

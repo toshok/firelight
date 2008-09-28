@@ -2,6 +2,13 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	x:Name="top" Width="800" Height="500" Canvas.Left="50">
 
+  <Canvas.Resources>
+    <Storyboard x:Name="demoAnimation">
+      <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
+      <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="600" Duration="00:00:05" />
+    </Storyboard>
+  </Canvas.Resources>
+
   <Canvas.Background>
     <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
       <GradientStop Offset="0%" Color="red" />
@@ -10,7 +17,7 @@
   </Canvas.Background>
 
   <!-- children -->
-  <Canvas x:Name="child" Width="50" Height="50" Canvas.Left="50" Canvas.Top="50">
+  <Canvas x:Name="child" Width="50" Height="50">
     <Canvas.Background>
       <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
         <GradientStop x:Name="color0" Offset="0%" Color="blue" />
@@ -20,18 +27,27 @@
 
     <Canvas.RenderTransform>
       <TransformGroup>
+	<TranslateTransform x:Name="translate" X="50" Y="50" />
         <ScaleTransform x:Name="scale" />
       </TransformGroup>
     </Canvas.RenderTransform>
 
     <Canvas.Triggers>
         <EventTrigger RoutedEvent="MouseEnter">
-          <Setter TargetName="scale" Property="ScaleX" Value="1.1" />
-          <Setter TargetName="scale" Property="ScaleY" Value="1.1" />
+	  <BeginStoryboard>
+	    <Storyboard Duration="0:0:0.1">
+	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="2.0" />
+	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="2.0" />
+	    </Storyboard>
+	  </BeginStoryboard>
         </EventTrigger>
         <EventTrigger RoutedEvent="MouseLeave">
-          <Setter TargetName="scale" Property="ScaleX" Value="1.0" />
-          <Setter TargetName="scale" Property="ScaleY" Value="1.0" />
+	  <BeginStoryboard>
+	    <Storyboard Duration="0:0:0.1">
+	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="2.0" To="1.0" />
+	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="2.0" To="1.0" />
+	    </Storyboard>
+	  </BeginStoryboard>
         </EventTrigger>
         <EventTrigger RoutedEvent="MouseLeftButtonDown">
           <Setter TargetName="color0" Property="Color" Value="red" />
@@ -44,7 +60,7 @@
     </Canvas.Triggers>
   </Canvas>
 
-  <TextBlock x:Name="text" Canvas.Left="50" Canvas.Top="120" Text="Firelight:  Silverlight/WPF implemented entirely in JavaScript!">
+  <TextBlock x:Name="text" FontSize="10" Canvas.Left="50" Canvas.Top="120" Text="Firelight:  Silverlight/WPF implemented entirely in JavaScript!">
     <TextBlock.Foreground>
       <LinearGradientBrush StartPoint="0%,50%" EndPoint="100%,50%">
         <GradientStop Offset="0%" Color="black" />
@@ -55,7 +71,7 @@
 
     <TextBlock.RenderTransform>
       <TransformGroup>
-        <RotateTransform x:Name="rotate" Angle="0" CenterX="150" CenterY="20" />
+        <RotateTransform x:Name="rotate" Angle="0" CenterX="150" CenterY="10" />
       </TransformGroup>
     </TextBlock.RenderTransform>
   </TextBlock>

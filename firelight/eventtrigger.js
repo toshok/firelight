@@ -36,18 +36,18 @@ EventTrigger.prototype = $.extend(new DependencyObject(), {
       trigger: this,
 
       handleEvent: function (ev) {
-	this.trigger.runActions ();
+	this.trigger.performActions ();
       }
     };
 
     this.svgPeer.addEventListener (domEvent, eventHandler, false);
   },
 
-  runActions: function () {
+  performActions: function () {
     var actions = this.actions;
     for (var i = 0; i < actions.count; i ++) {
       var action = actions.getItemAt (i);
-      action.run (this.obj);
+      action.performAction (this.obj);
     }
   }
 });

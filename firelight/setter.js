@@ -8,7 +8,7 @@ Setter.prototype = $.extend (new DependencyObject(), {
     return "Setter";
   },
 
-  run: function (obj) {
+  performAction: function (obj) {
     Trace.debug ("i should be setting " + this.targetName + "." + this.property + " = " + this.value);
 
     var targetObject = obj.findName (this.targetName);

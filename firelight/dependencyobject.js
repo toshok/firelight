@@ -8,6 +8,50 @@ function DependencyObject ()
 }
 
 DependencyObject.prototype = $.extend(new Object(), {
+  connectHost: function (host) {
+    if (this.host)
+      throw new Error ("cannot attach a dependency object to two different hosts.");
+    this.host = host;
+
+    for (var dp in this.properties) {
+      var val = this.properties[dp];
+      if (val && val.connectHost)
+	val.connectHost (host);
+    }
+
+    var logicalChildren = this.getLogicalChildren ();
+    if (logicalChildren /* && logicalChildren instanceof Collection */) {
+      for (var i = 0; i < logicalChildren.count; i ++) {
+	var child = logicalChildren.getItemAt(i);
+	if (child && child.connectHost)
+	  child.connectHost (host);
+      }
+    }
+  },
+
+  disconnectHost: function () {
+    this.host = null;
+
+    for (var dp in this.properties) {
+      var val = this.properties[dp];
+      if (val && val.disconnectHost)
+	val.disconnectHost (host);
+    }
+
+    var logicalChildren = this.getLogicalChildren ();
+    if (logicalChildren /* && logicalChildren instanceof Collection */) {
+      for (var i = 0; i < logicalChildren.count; i ++) {
+	var child = logicalChildren.getItemAt(i);
+	if (child && child.disconnectHost)
+	  child.disconnectHost (host);
+      }
+    }
+  },
+
+  getLogicalChildren: function () {
+    return null;
+  },
+
   setValue: function (dp, new_value) {
     if (!dp || !(dp instanceof DependencyProperty))
       throw new Error ("setValue requires valid DependencyProperty");
@@ -57,7 +101,7 @@ DependencyObject.prototype = $.extend(new Object(), {
 
       this.onPropertyChanged (args);
       if (dp.metadata && dp.metadata.propertyChangedHandler)
-	dp.metadata.propertyChangedHandler (args);
+	dp.metadata.propertyChangedHandler.apply (this, [args]);
 	this.notifyListenersOfPropertyChange (args);
     }
   },
@@ -123,18 +167,12 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   addChild: function (child) {
-    var content;
-    if (this.isSubclass (Collection)) {
-      content = this;
-    }
-    else {
-      if (!this.contentProperty)
-	throw new Error ("you can't add children to a non-collection element which lacks a contentProperty (" + this + ")");
-      var contentProp = this.lookupProperty (this.contentProperty);
-      if (!contentProp)
-	throw new Error ("could not find contentProperty '" + this.contentProperty + "' on element '" + this + "'.");
-      content = this.getValue (contentProp);
-    }
+    if (!this.contentProperty)
+      throw new Error ("you can't add children to a non-collection element which lacks a contentProperty (" + this + ")");
+    var contentProp = this.lookupProperty (this.contentProperty);
+    if (!contentProp)
+      throw new Error ("could not find contentProperty '" + this.contentProperty + "' on element '" + this + "'.");
+    var content = this.getValue (contentProp);
 
     // XXX this should really check the property type instead
     // of the content value (which might be null).
@@ -169,11 +207,11 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   applyToPeer: function (host, change_callback) {
-    console.log ("in dependencyobject.applyToPeer");
+    Trace.debug ("in dependencyobject.applyToPeer");
 
     var valueProp = this.lookupProperty ("SvgPropertyValue");
 
-    console.log (valueProp);
+    Trace.debug (valueProp);
 
     var that = this;
     this.addPropertyChangeListener (valueProp,

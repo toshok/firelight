@@ -4,6 +4,11 @@ function TimelineCollection ()
 }
 
 TimelineCollection.prototype = $.extend(new Collection(), {
+
+  getLogicalChildren: function () {
+    return this;
+  },
+
   toString: function () {
     return "TimelineCollection";
   }

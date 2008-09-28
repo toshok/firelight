@@ -38,7 +38,7 @@ GradientBrush.prototype = $.extend(new Brush(), {
       this.gradientDef.appendChild (peer);
     }
 
-    console.log ("setting svgPropertyValue to '" + "url(#" + this.gradientId + ")'");
+    Trace.debug ("setting svgPropertyValue to '" + "url(#" + this.gradientId + ")'");
     this.svgPropertyValue = "url(#" + this.gradientId + ")";
   }
 });

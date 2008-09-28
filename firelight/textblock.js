@@ -22,7 +22,7 @@ TextBlock.prototype = $.extend(new FrameworkElement(), {
   },
 
   updateTransform: function () {
-    console.log ("setting the transform to '" + this.renderTransform.svgPropertyValue +
+    Trace.debug ("setting the transform to '" + this.renderTransform.svgPropertyValue +
 		 "translate (" + this.renderPosition.x + ","
 		 + this.renderPosition.y + ")'");
     this.svgPeer.setAttributeNS (null, "transform",
@@ -64,6 +64,10 @@ TextBlock.prototype = $.extend(new FrameworkElement(), {
 
     }
 
+    this.svgPeer.setAttributeNS (null, "font-family", this.fontFamily);
+    this.svgPeer.setAttributeNS (null, "font-size", this.fontSize);
+    this.svgPeer.setAttributeNS (null, "font-weight", this.fontWeight);
+
     this.renderPositionBinding = new Binding (function () {
 						that.updateTransform ();
 					      });
@@ -82,5 +86,37 @@ DependencyProperties.register (TextBlock, "Inlines",
 DependencyProperties.register (TextBlock, "Foreground",
 			       { propertyType: Brush,
 				 affectsRender: true } );
+
+DependencyProperties.register (TextBlock, "FontFamily",
+			       { defaultValue: "Lucida Sans Unicode",
+				 affectsMeasure: true,
+				 propertyChangedHandler: function (args) {
+				   if (this.svgPeer)
+				     this.svgPeer.setAttributeNS (null, "font-family", args.newValue);
+				 } } );
+
+DependencyProperties.register (TextBlock, "FontSize",
+			       { defaultValue: 14.666,
+				 affectsMeasure: true,
+				 propertyChangedHandler: function (args) {
+				   if (this.svgPeer)
+				     this.svgPeer.setAttributeNS (null, "font-size", args.newValue);
+				 } } );
+
+DependencyProperties.register (TextBlock, "FontStyle",
+			       { defaultValue: "Normal", // should be the font style enum..
+				 affectsMeasure: true,
+				 propertyChangedHandler: function (args) {
+				   if (this.svgPeer)
+				     this.svgPeer.setAttributeNS (null, "font-style", args.newValue);
+				 } } );
+
+DependencyProperties.register (TextBlock, "FontWeight",
+			       { defaultValue: "Normal", // should be the font weight enum..
+				 affectsMeasure: true,
+				 propertyChangedHandler: function (args) {
+				   if (this.svgPeer)
+				     this.svgPeer.setAttributeNS (null, "font-weight", args.newValue);
+				 } } );
 
 Types.registerType ("System.Windows.Controls", TextBlock);

@@ -15,6 +15,7 @@ JS_SOURCES=	consts.js			\
 		dependencyobject.js		\
 		namescope.js			\
 		collection.js			\
+		resourcedictionary.js		\
 		triggeractioncollection.js	\
 		eventtrigger.js			\
 		triggercollection.js		\
@@ -47,6 +48,7 @@ JS_SOURCES=	consts.js			\
 		rectangle.js			\
 		timeline.js			\
 		timelinecollection.js		\
+		timelinegroup.js		\
 		doubleanimation.js		\
 		storyboard.js			\
 		beginstoryboard.js		\

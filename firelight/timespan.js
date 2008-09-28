@@ -1,10 +1,18 @@
 var Timespan = {
+  fromMilliseconds: function (ms) {
+    return ms * 10000.0;
+  },
+
+  toMilliseconds: function (ts) {
+    return ts / 10000.0;
+  },
+
   fromSeconds: function (s) {
     return s * 10000000.0;
   },
 
   toSeconds: function (ts) {
-    return ts /  10000000.0;
+    return ts / 10000000.0;
   },
 
   parse: function (s) {
@@ -20,8 +28,9 @@ var Timespan = {
     var hours = match[1];
     var minutes = match.length > 2 ? match[2] : 0;
     var seconds = match.length > 3 ? match[3] : 0;
-    var fraction = match.length > 4 ? match[4] : 0;
+    var fraction = match.length > 4 ? (match[4] ? match[4] : 0) : 0;
 
+    //console.log ("parsed timespan as " + hours + ":" + minutes + ":" + seconds + "." + fraction);
     return Timespan.fromSeconds (Number(fraction) +
 				 Number(seconds) +
 				 Number(minutes) * 60 +

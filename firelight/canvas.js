@@ -50,7 +50,7 @@ Canvas.prototype = $.extend(new Panel(), {
   },
 
   updateTransform: function () {
-    console.log ("setting the transform to '" + this.renderTransform.svgPropertyValue +
+    Trace.debug ("setting the transform to '" + this.renderTransform.svgPropertyValue +
 		 "translate (" + this.renderPosition.x + ","
 		 + this.renderPosition.y + ")'");
     this.svgPeer.setAttributeNS (null, "transform",

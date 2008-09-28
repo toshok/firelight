@@ -9,30 +9,6 @@ UIElement.prototype = $.extend(new DependencyObject(), {
     Trace.debug ("XXX addEventListener needs implementing");
   },
 
-  disconnectHost: function () {
-    this.host = null;
-
-    var logicalChildren = this.getLogicalChildren ();
-    if (logicalChildren instanceof Collection) {
-      for (var i = 0; i < logicalChildren.count; i ++)
-	logicalChildren.getItemAt(i).disconnectHost ();
-      }
-  },
-
-  connectHost: function (host) {
-    this.host = host;
-
-    var logicalChildren = this.getLogicalChildren ();
-    if (logicalChildren instanceof Collection) {
-      for (var i = 0; i < logicalChildren.count; i ++)
-	logicalChildren.getItemAt(i).connectHost (host);
-      }
-  },
-
-  getLogicalChildren: function () {
-    return null;
-  },
-
   getVisualParent: function () {
     return this.visualParent; // XXX
   },

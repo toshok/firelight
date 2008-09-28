@@ -5,7 +5,7 @@ function SvgHost ()
 
   this.animationManager = new AnimationManager ();
   this.layoutManager = new LayoutManager ();
-  this.globalTick = 10;
+  this.globalTick = 50;
   this.intervalId = null;
 }
 
@@ -60,7 +60,7 @@ SvgHost.prototype = {
     if (this.intervalId == null) {
       var that = this;
       Trace.debug ("starting clock");
-      this.intervalId = setInterval (function () { that.globalClockTick (); }, this.globalTick);
+      this.intervalId = setInterval (function (ms_late) { that.globalClockTick (ms_late); }, this.globalTick);
     }
   },
 
@@ -71,7 +71,7 @@ SvgHost.prototype = {
     }
   },
 
-  globalClockTick: function () {
+  globalClockTick: function (ms_late) {
     Trace.debug ("global clock ticking");
     this.animationManager.processAnimations ();
     this.layoutManager.processPendingMeasureAndArrange ();
@@ -103,15 +103,20 @@ SvgHost.prototype = {
 
   removeTimeline: function (tl) {
     this.animationManager.removeTimeline (tl);
-    this.startClock ();
   },
 
   maybeStopClock: function () {
     if (this.intervalId != -1 &&
 	!this.layoutManager.needClock() &&
 	!this.animationManager.needClock()){
-      Trace.debug ("stopping global clock");
+      console.log ("stopping global clock");
       this.stopClock ();
     }
+//    else {
+//      if (this.layoutManager.needClock ())
+//	console.log ("layout manager needs the clock");
+//      if (this.animationManager.needClock ())
+//	console.log ("animation manager needs the clock");
+//    }
   }
 };

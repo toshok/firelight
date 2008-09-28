@@ -178,6 +178,10 @@ DependencyProperties.register (FrameworkElement, "Margin",
 				 },
 				 affectsMeasure: true });
 
+DependencyProperties.register (FrameworkElement, "Resources",
+			       { defaultValue: function () { return new ResourceDictionary(); },
+				 propertyType: ResourceDictionary });
+
 DependencyProperties.register (FrameworkElement, "Triggers",
 			       { defaultValue: function () { return new TriggerCollection(); },
 				 propertyType: TriggerCollection });
