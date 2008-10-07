@@ -36,6 +36,8 @@ DependencyProperties.register (Panel, "Children",
 				 propertyType: UIElementCollection,
 				 readOnly: true });
 DependencyProperties.register (Panel, "Background",
-			       { propertyType: Brush } );
+			       { propertyType: Brush,
+				 svgAttribute: "fill",
+				 svgPeer: "rectPeer" } );
 
 Types.registerType ("System.Windows.Controls", Panel);
