@@ -6,6 +6,6 @@ function Point (x, y)
 
 Point.prototype = {
     toString: function () {
-	return x + "," + y;
+	return this.x + "," + this.y;
     }
 };
