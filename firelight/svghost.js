@@ -1,11 +1,14 @@
 function SvgHost ()
 {
+  var defaultTick = 50;
+
+
   this.root = null;
   this.rootVisual = null;
 
   this.animationManager = new AnimationManager ();
   this.layoutManager = new LayoutManager ();
-  this.globalTick = 50;
+  this.globalTick = defaultTick;
   this.intervalId = null;
 
   if (arguments && arguments[0]) {
@@ -15,6 +18,12 @@ function SvgHost ()
 
     if ("rootVisual" in args)
       this.setRootVisual (args.rootVisual);
+
+    if ("globalTick" in args) {
+      this.globalTick = parseInt (args.globalTick);
+      if (isNaN (this.globalTick)
+	  this.globalTick = defaultTick;
+    }
   }
 }
 
