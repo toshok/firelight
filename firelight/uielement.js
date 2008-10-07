@@ -51,11 +51,13 @@ DependencyProperties.register (UIElement, "OpacityMask",
 			       { affectsRender: true });
 DependencyProperties.register (UIElement, "Opacity",
 			       { defaultValue: 1.0,
-				 affectsRender: true });
+				 affectsRender: true,
+				 cssAttribute: "opacity" });
 DependencyProperties.register (UIElement, "Tag");
 DependencyProperties.register (UIElement, "RenderTransform",
 			       { defaultValue: function () { return new TransformGroup(); },
 				 propertyType: Transform,
-				 affectsRender: true });// something more here?
+				 affectsRender: true,
+				 svgAttribute: "transform" });// something more here?
 
 Types.registerType ("System.Windows", UIElement);
