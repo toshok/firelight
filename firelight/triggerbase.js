@@ -10,7 +10,6 @@ TriggerBase.prototype = $.extend(new DependencyObject(), {
     var actions = this.actions;
     for (var i = 0; i < actions.count; i ++) {
       var action = actions.getItemAt (i);
-      console.log ("obj = " + this.obj);
       action.performAction (this.obj);
     }
   }
