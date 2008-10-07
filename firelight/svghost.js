@@ -21,7 +21,7 @@ function SvgHost ()
 
     if ("globalTick" in args) {
       this.globalTick = parseInt (args.globalTick);
-      if (isNaN (this.globalTick)
+      if (isNaN (this.globalTick))
 	  this.globalTick = defaultTick;
     }
   }
