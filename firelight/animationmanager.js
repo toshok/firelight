@@ -26,7 +26,7 @@ function AnimationManager () {
     return timelines.length > 0;
   };
 
-  this.processAnimations = logExceptions (function () {
+  this.processAnimations = function () {
     var currentGlobalTime = (new Date()).getTime();
 
     var removeAfterUpdate = [];
@@ -56,5 +56,5 @@ function AnimationManager () {
 
     for (i = removeAfterUpdate.length - 1; i >= 0; i ++)
       timelines.remove (removeAfterUpdate[i]);
-  });
+  };
 }
