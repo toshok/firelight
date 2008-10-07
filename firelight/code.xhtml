@@ -8,33 +8,22 @@
     <script type="text/javascript">
       <![CDATA[
 	$(document).ready(function() {
-	  var host = new SvgHost ();
-
-	  var root = new Canvas ();
-
-	  root.width = 800;
-	  root.height = 500;
+	  var root = new Canvas ({ Width: 800,
+	      	     	 	   Height: 500 });
 
 	  var brush = new LinearGradientBrush ();
 
-	  var stop;
-	  stop = new GradientStop ();
-	  stop.color = "red";
-	  stop.offset = "0%";
-	  brush.gradientStops.addItem (stop);
-
-	  stop = new GradientStop ();
-	  stop.color = "blue";
-	  stop.offset = "100%";
-	  brush.gradientStops.addItem (stop);
+	  brush.gradientStops.addItem (new GradientStop ({ Color: "red",
+	  			      	   	       	   Offset: "0%" }));
+	  brush.gradientStops.addItem (new GradientStop ({ Color: "blue",
+	  			      	   	       	   Offset: "100%" }));
 
 	  root.background = brush;
 
 	  root.addEventListener ("MouseLeftButtonDown", function(sender, args) { alert ("button down!"); });
 
-	  host.setDOMElement (document.getElementById("svg-host")); // jquery doesn't seem to work here
-	  host.setRootVisual (root);
-	  host.render ();
+	  var host = new SvgHost ({ domElement: document.getElementById("svg-host"), // jquery doesn't seem to work here);
+	      	     	 	    rootVisual: root });
 	});
       ]]>
     </script>
