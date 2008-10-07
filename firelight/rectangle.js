@@ -31,6 +31,14 @@ Rectangle.prototype = $.extend(new Shape(), {
 
   createPeer: function (host) {
     this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "rect");
+
+    // hook up any event triggers we might have
+    var triggers = this.triggers;
+    for (var t = 0; t < triggers.count; t ++) {
+      var trigger = triggers.getItemAt (t);
+      trigger.hookupTrigger (this, this.svgPeer);
+    }
+    
     return this.svgPeer;
   }
 });
