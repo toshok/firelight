@@ -1,9 +1,6 @@
-function SolidColorBrush (color)
+function SolidColorBrush ()
 {
-  Brush.apply (this, []);
-
-  if (typeof (color) != "undefined")
-    this.color = color;
+  Brush.apply (this, arguments);
 }
 
 SolidColorBrush.prototype = $.extend(new Brush(), {

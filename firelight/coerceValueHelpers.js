@@ -14,7 +14,7 @@ function validateEnum (e, v) {
 function coerceValueToBrush (v)
 {
   if (typeof (v) == "string") {
-    return new SolidColorBrush (v);
+    return new SolidColorBrush ({ Color: v });
   }
   else {
     Trace.error ("FIXME: returning object unmolested in coerceValueToBrush");
