@@ -83,6 +83,7 @@ var XamlReader = {
 	if (!attached_nodeType)
 	  throw new Error ("could not resolve class " + attached_className + "in context of attached property '" + attr.nodeName + "'.");
 
+	// we need a better way to look up properties than creating an instance...
 	var n = new attached_nodeType();
 	dp = n.lookupProperty (attr.nodeName.substring (dot + 1));
       }
