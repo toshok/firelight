@@ -6,24 +6,21 @@ function GradientBrush ()
 GradientBrush.prototype = $.extend(new Brush(), {
   contentProperty: "GradientStops",
 
-  applyToPeer: function (host, change_callback) {
-    this.gradientId = getDefId ();
-
-    this.gradientDef = document.createElementNS (FirelightConsts.SVGns, this.svgGradientElement);
-    this.gradientDef.setAttributeNS (null, "id", this.gradientId);
-
-    var that = this;
-    this.gradientStops.addCollectionChangeHandler (function (args) {
-						     that.computePropertyValue();
-						   });
-
-    host.defs.appendChild (this.gradientDef);
-
-    Trace.debug ("calling dependencyobject.applyToPeer");
-    DependencyObject.prototype.applyToPeer.apply (this, arguments);
-  },
-
   computePropertyValue: function () {
+    if (!this.gradientId) {
+      this.gradientId = getDefId ();
+
+      this.gradientDef = document.createElementNS (FirelightConsts.SVGns, this.svgGradientElement);
+      this.gradientDef.setAttributeNS (null, "id", this.gradientId);
+
+      var that = this;
+      this.gradientStops.addCollectionChangeHandler (function (args) {
+						       that.computePropertyValue();
+						     });
+
+      this.host.defs.appendChild (this.gradientDef);
+    }
+
     // first clear out the gradientStops
     while (this.gradientDef.firstChild)
       this.gradientDef.removeChild(this.gradientDef.firstChild);
