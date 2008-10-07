@@ -49,57 +49,19 @@ Canvas.prototype = $.extend(new Panel(), {
     return result;
   },
 
-  updateTransform: function () {
-    Trace.debug ("setting the transform to '" + this.renderTransform.svgPropertyValue +
-		 "translate (" + this.renderPosition.x + ","
-		 + this.renderPosition.y + ")'");
-    this.svgPeer.setAttributeNS (null, "transform",
-				 "translate (" + this.renderPosition.x + ","
-				               + this.renderPosition.y + ")"
-				 + this.renderTransform.svgPropertyValue);
-  },
-
-  updateRectFill: function () {
-    this.rectPeer.setAttributeNS (null, "fill",
-				  this.background.svgPropertyValue);
-  },
-
   createPeer: function (host) {
     this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "g");
 
-    var that = this;
+    this.rectPeer = document.createElementNS (FirelightConsts.SVGns, "rect");
+    this.svgPeer.appendChild (this.rectPeer);
 
-    if (this.renderTransform) {
-      this.renderTransform.applyToPeer (this.host,
-					function (v) {
-					  that.updateTransform ();
-					});
-      this.renderTransform.computePropertyValue();
-    }
-
-
-    this.renderPositionBinding = new Binding (function () {
-						that.updateTransform ();
-					      });
-
-    if (this.background) {
-      this.rectPeer = document.createElementNS (FirelightConsts.SVGns, "rect");
-      this.background.applyToPeer (this.host,
-				   function (v) {
-				     that.updateRectFill();
-				   });
-      this.background.computePropertyValue ();
-
-      this.renderSizeBinding = new Binding (function () {
-					      // XXX these need an automatic binding so things update properly
-					      that.rectPeer.setAttributeNS (null, "width", String(that.renderSize.width));
-					      that.rectPeer.setAttributeNS (null, "height", String(that.renderSize.height));
-					    });
-
-      this.renderSizeBinding.update ();
-
-      this.svgPeer.appendChild(this.rectPeer);
-    }
+    // we replace the normal FrameworkElement renderSizeBinding since
+    // the width/height attributes on a canvas actually refer to its
+    // background rectangle, not the bounds of the canvas itself.
+    this.renderSizeBinding = new Binding (this, function () {
+					    this.rectPeer.setAttributeNS (null, "width", String(this.renderSize.width));
+					    this.rectPeer.setAttributeNS (null, "height", String(this.renderSize.height));
+					  });
 
     // XXX we need to bind children collection changes to regenerate the svg peers
     var children = this.children;
