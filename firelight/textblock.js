@@ -21,21 +21,6 @@ TextBlock.prototype = $.extend(new FrameworkElement(), {
     }
   },
 
-  updateTransform: function () {
-    Trace.debug ("setting the transform to '" + this.renderTransform.svgPropertyValue +
-		 "translate (" + this.renderPosition.x + ","
-		 + this.renderPosition.y + ")'");
-    this.svgPeer.setAttributeNS (null, "transform",
-				 "translate (" + this.renderPosition.x + ","
-				               + this.renderPosition.y + ")"
-				 + this.renderTransform.svgPropertyValue);
-  },
-
-  updateFill: function () {
-    this.svgPeer.setAttributeNS (null, "fill",
-				 this.foreground.svgPropertyValue);
-  },
-
   createPeer: function (host) {
     this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "text");
 
@@ -44,33 +29,6 @@ TextBlock.prototype = $.extend(new FrameworkElement(), {
       var child_peer = inlines.getItemAt (i).createPeer (host);
       this.svgPeer.appendChild (child_peer);
     }
-
-    var that = this;
-
-    if (this.renderTransform) {
-      this.renderTransform.applyToPeer (this.host,
-					function (v) {
-					  that.updateTransform ();
-					});
-      this.renderTransform.computePropertyValue();
-    }
-
-    if (this.foreground) {
-      this.foreground.applyToPeer (this.host,
-				   function (v) {
-				     that.updateFill();
-				   });
-      this.foreground.computePropertyValue ();
-
-    }
-
-    this.svgPeer.setAttributeNS (null, "font-family", this.fontFamily);
-    this.svgPeer.setAttributeNS (null, "font-size", this.fontSize);
-    this.svgPeer.setAttributeNS (null, "font-weight", this.fontWeight);
-
-    this.renderPositionBinding = new Binding (function () {
-						that.updateTransform ();
-					      });
 
     return this.svgPeer;
   }
@@ -85,38 +43,27 @@ DependencyProperties.register (TextBlock, "Inlines",
 
 DependencyProperties.register (TextBlock, "Foreground",
 			       { propertyType: Brush,
-				 affectsRender: true } );
+				 affectsRender: true,
+				 svgAttribute: "fill" });
 
 DependencyProperties.register (TextBlock, "FontFamily",
 			       { defaultValue: "Lucida Sans Unicode",
 				 affectsMeasure: true,
-				 propertyChangedHandler: function (args) {
-				   if (this.svgPeer)
-				     this.svgPeer.setAttributeNS (null, "font-family", args.newValue);
-				 } } );
+				 svgAttribute: "font-family" });
 
 DependencyProperties.register (TextBlock, "FontSize",
 			       { defaultValue: 14.666,
 				 affectsMeasure: true,
-				 propertyChangedHandler: function (args) {
-				   if (this.svgPeer)
-				     this.svgPeer.setAttributeNS (null, "font-size", args.newValue);
-				 } } );
+				 svgAttribute: "font-size" });
 
 DependencyProperties.register (TextBlock, "FontStyle",
 			       { defaultValue: "Normal", // should be the font style enum..
 				 affectsMeasure: true,
-				 propertyChangedHandler: function (args) {
-				   if (this.svgPeer)
-				     this.svgPeer.setAttributeNS (null, "font-style", args.newValue);
-				 } } );
+				 svgAttribute: "font-style" });
 
 DependencyProperties.register (TextBlock, "FontWeight",
 			       { defaultValue: "Normal", // should be the font weight enum..
 				 affectsMeasure: true,
-				 propertyChangedHandler: function (args) {
-				   if (this.svgPeer)
-				     this.svgPeer.setAttributeNS (null, "font-weight", args.newValue);
-				 } } );
+				 svgAttribute: "font-weight" });
 
 Types.registerType ("System.Windows.Controls", TextBlock);
