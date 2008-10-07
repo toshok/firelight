@@ -4,6 +4,17 @@ function FrameworkElement ()
 
   this.renderPosition = new Point (0,0);
   this.renderSize = new Size (NaN,NaN);
+
+  this.renderPositionBinding = new Binding (this, function () {
+					      this.updateRenderTransform ();
+					    });
+
+  this.renderSizeBinding = new Binding (this, function () {
+					  if (this.svgPeer) {
+					    this.svgPeer.setAttributeNS (null, "width", String(this.renderSize.width));
+					    this.svgPeer.setAttributeNS (null, "height", String(this.renderSize.height));
+					  }
+					});
 }
 
 FrameworkElement.prototype = $.extend(new UIElement(), {
@@ -21,8 +32,6 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
       return null;
     return ns.findName (name);
   },
-
-
 
   onPropertyChanged: function (args) {
     Trace.debug ("in FrameworkElement.onPropertyChanged");
@@ -67,8 +76,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 
   setRenderPosition: function (point) {
     this.renderPosition = point;
-    if (this.renderPositionBinding)
-      this.renderPositionBinding.update();
+    this.renderPositionBinding.update();
   },
 
   toString: function () {
@@ -117,7 +125,7 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 		   new Rect (finalRect.left, finalRect.top, finalRect.width, finalRect.height));
 
     var specified = new Size (this.width, this.height);
-    Trace.debug ("measure on " + this.name + ", specified size = " + specified);
+    Trace.debug ("arrange on " + this.name + ", specified size = " + specified + ", finalRect = " + finalRect);
 
     finalRect.shrinkBy (this.margin);
 
@@ -141,12 +149,21 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
     // XXX what do we do with finalRect.x and y?
     // XXX do this for now
     this.renderPosition = new Point (finalRect.left, finalRect.top);
-    if (this.renderPositionBinding)
-      this.renderPositionBinding.update ();
+    this.renderPositionBinding.update ();
     Trace.debug (this.name + " renderSize = " + this.renderSize);
 
     //Trace.debug ("more here in FrameworkElement::Arrange.  move the bounds or something?  set properties?  who knows!?");
+  },
+
+  updateRenderTransform: function () {
+    if (this.svgPeer) {
+      this.svgPeer.setAttributeNS (null, "transform",
+				   "translate (" + this.renderPosition.x + ","
+				                 + this.renderPosition.y + ") "
+					         + this.renderTransform.svgPropertyValue);
+    }
   }
+
 });
 
 DependencyProperties.register (FrameworkElement, "Width",
