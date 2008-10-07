@@ -77,6 +77,12 @@
     </TextBlock.RenderTransform>
   </TextBlock>
 
-  <Rectangle x:Name="rect" Opacity="0" Canvas.Left="50" Canvas.Top="180" Width="100" Height="50" RadiusX="5" RadiusY="3" Fill="yellow" Stroke="black" />
+  <Rectangle x:Name="rect" Opacity="0" Canvas.Left="50" Canvas.Top="180" Width="100" Height="50" RadiusX="5" RadiusY="3" Fill="yellow" Stroke="black">
+    <Rectangle.Triggers>
+      <Trigger SourceName="rotate" Property="Angle" Value="360">
+        <Setter TargetName="rect" Property="Fill" Value="red" />
+      </Trigger>
+    </Rectangle.Triggers>
+  </Rectangle>
 
 </Canvas>
