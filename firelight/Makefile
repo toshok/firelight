@@ -17,6 +17,8 @@ JS_SOURCES=	consts.js			\
 		collection.js			\
 		resourcedictionary.js		\
 		triggeractioncollection.js	\
+		triggerbase.js			\
+		trigger.js			\
 		eventtrigger.js			\
 		triggercollection.js		\
 		transformcollection.js		\
