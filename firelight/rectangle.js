@@ -29,45 +29,20 @@ Rectangle.prototype = $.extend(new Shape(), {
     return result;
   },
 
-  updateFill: function () {
-    this.svgPeer.setAttributeNS (null, "fill",
-				 this.fill.svgPropertyValue);
-  },
-
-  updateStroke: function () {
-    this.svgPeer.setAttributeNS (null, "stroke",
-				 this.stroke.svgPropertyValue);
-  },
-
   createPeer: function (host) {
-    var peer = document.createElementNS (FirelightConsts.SVGns, "rect");
-
-    var that = this;
-
-    if (this.fill)
-      this.fill.applyToPeer (this.host, function (v) { that.updateFill (); });
-
-    if (this.stroke)
-      this.stroke.applyToPeer (this.host, function (v) { that.updateStroke (); });
-
-    // XXX these need an automatic binding
-    peer.setAttributeNS (null, "x", String(this.renderPosition.x));
-    peer.setAttributeNS (null, "y", String(this.renderPosition.y));
-    peer.setAttributeNS (null, "width", String(this.renderSize.width));
-    peer.setAttributeNS (null, "height", String(this.renderSize.height));
-    peer.setAttributeNS (null, "rx", String(this.radiusX));
-    peer.setAttributeNS (null, "ry", String(this.radiusY));
-
-    this.svgPeer = peer;
-    return peer;
+    this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "rect");
+    return this.svgPeer;
   }
 });
 
 DependencyProperties.register (Rectangle, "RadiusX",
 			       { defaultValue: 0.0,
-				 affectsRender: true });
+				 affectsRender: true,
+				 svgAttribute: "rx" });
+
 DependencyProperties.register (Rectangle, "RadiusY",
 			       { defaultValue: 0.0,
-				 affectsRender: true });
+				 affectsRender: true,
+				 svgAttribute: "ry" });
 
 Types.registerType ("System.Windows.Shapes", Rectangle);
