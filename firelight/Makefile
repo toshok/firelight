@@ -24,6 +24,7 @@ JS_SOURCES=	consts.js			\
 		rotatetransform.js		\
 		scaletransform.js		\
 		translatetransform.js		\
+		skewtransform.js		\
 		transformgroup.js		\
 		uielement.js			\
 		frameworkelement.js		\
