@@ -1,10 +1,72 @@
 function DependencyObject ()
 {
-  this.propertychange_listeners = {};
-  this.wildcard_listeners = [];
+  this.host = null;
   this.properties = {};
 
   this.type = this.__proto__;
+
+
+  // property change listeners
+  this.addPropertyChangeListener = function (dp, cb) {
+    if (dp == null)
+      wildcard_listeners.push (cb);
+    else {
+	if (propertychange_listeners[dp] == null)
+	  propertychange_listeners[dp] = [];
+	propertychange_listeners[dp].push (cb);
+    }
+  };
+
+  this.removePropertyChangeListener = function (dp, cb) {
+    if (dp == null) {
+      for (var i = 0; i < wildcard_listeners.length; i ++) {
+	if (wildcard_listeners[i] == cb) {
+	  wildcard_listeners.remove (i);
+	  break;
+	}
+      }
+    }
+    else if (propertychange_listeners[dp] != null) {
+      for (var i = 0; i < propertychange_listeners[dp].length; i ++) {
+	if ((propertychange_listeners[dp])[i] == cb) {
+	  propertychange_listeners[dp].remove (i);
+	  break;
+	}
+      }
+    }
+  };
+
+  this.notifyListenersOfPropertyChange = function (args) {
+    notifyListenerList (propertychange_listeners[args.property], args);
+    notifyListenerList (wildcard_listeners, args);
+  };
+
+  function notifyListenerList (list, args) {
+    if (list == null)
+      return;
+
+      var copy = [];
+      for (i = 0; i < list.length; i ++)
+	copy.push (list[i]);
+
+      for (i = 0; i < copy.length; i ++)
+	copy[i] (this, args);
+  };
+  var propertychange_listeners = {};
+  var wildcard_listeners = [];
+
+  // the optional arguments are:
+  // arg[0] = parameters
+  if (arguments && arguments.length > 0) {
+    for (var k in arguments[0]) {
+      var prop = this.lookupProperty (k);
+
+      if (prop == null)
+	throw new Error ("Illegal property reference in constructor arguments: '" + k + "'.");
+      else
+	this.setValue(prop, arguments[0][k]);
+    }
+  }
 }
 
 DependencyObject.prototype = $.extend(new Object(), {
@@ -13,8 +75,8 @@ DependencyObject.prototype = $.extend(new Object(), {
       throw new Error ("cannot attach a dependency object to two different hosts.");
     this.host = host;
 
-    for (var dp in this.properties) {
-      var val = this.properties[dp];
+    for (var dpkey in this.properties) {
+      var val = this.properties[dpkey];
       if (val && val.connectHost)
 	val.connectHost (host);
     }
@@ -27,13 +89,17 @@ DependencyObject.prototype = $.extend(new Object(), {
 	  child.connectHost (host);
       }
     }
+
+    // we delay this until we're connected because some firelight objects need a
+    // host to do their work (GradientBrushes come to mind).
+    this.initializeBoundProperties ();
   },
 
   disconnectHost: function () {
     this.host = null;
 
-    for (var dp in this.properties) {
-      var val = this.properties[dp];
+    for (var dpkey in this.properties) {
+      var val = this.properties[dpkey];
       if (val && val.disconnectHost)
 	val.disconnectHost (host);
     }
@@ -60,14 +126,14 @@ DependencyObject.prototype = $.extend(new Object(), {
       throw new Error ("setValue(" + dp + ") passed an undefined value");
 
     //if (dp.readonly) throw new "Attempting to set a value on read-only property '" + dp.name + "'";
-    var old_value = this.properties[dp];
+    var old_value = this.properties[dp.key];
 
     var propertyType = dp.resolvePropertyType ();
     if (!propertyType) throw "unable to resolve property type for " + dp;
     if (propertyType == String) {
       if (typeof (new_value) != "string")
 	throw "property " + dp + " requires a string value";
-      this.properties[dp] = new_value;
+      this.properties[dp.key] = new_value;
     }
     else if (propertyType == Number) {
       /* be nice and try to automatically convert strings to numbers */
@@ -79,20 +145,20 @@ DependencyObject.prototype = $.extend(new Object(), {
       }
       if (typeof (new_value) != "number")
 	throw "property " + dp + " requires a number value";
-      this.properties[dp] = new_value;
+      this.properties[dp.key] = new_value;
     }
     else if (new_value.isSubclass && new_value.isSubclass (propertyType))
-      this.properties[dp] = new_value;
+      this.properties[dp.key] = new_value;
     else if (dp.metadata && dp.metadata.coerceValue) {
-      this.properties[dp] = dp.metadata.coerceValue (new_value);
+      this.properties[dp.key] = dp.metadata.coerceValue (new_value);
     }
     else if (propertyType.prototype.coerceValueToType) {
-      this.properties[dp] = propertyType.prototype.coerceValueToType (new_value);
+      this.properties[dp.key] = propertyType.prototype.coerceValueToType (new_value);
     }
     else
       // XXX punt here, not sure how to deal with opera's lack of __proto__ and therefore failure of isSubclass.
       // throw new Error ("DependencyProperty '" + dp + "' lacks a coerceValue method, and value '" + new_value + "' is not the registered type.");
-      this.properties[dp] = new_value;
+      this.properties[dp.key] = new_value;
 
     if (old_value != new_value || (dp.metadata && dp.metadata.alwaysNotify)) {
       var args = { "property" : dp,
@@ -107,18 +173,18 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   getValue: function (dp) {
-    if (!(dp in this.properties)) {
+    if (!(dp.key in this.properties)) {
       if (dp.metadata) {
 	if (typeof (dp.metadata.defaultValue) == "undefined")
-	  this.properties[dp] = null;
+	  this.properties[dp.key] = null;
 	else
-	  this.properties[dp] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
+	  this.properties[dp.key] = (typeof (dp.metadata.defaultValue) == "function") ? dp.metadata.defaultValue() : dp.metadata.defaultValue;
       }
       else
-	this.properties[dp] = null;
+	this.properties[dp.key] = null;
     }
 
-    return this.properties[dp];
+    return this.properties[dp.key];
   },
 
   isSubclass: function (type) {
@@ -133,37 +199,25 @@ DependencyObject.prototype = $.extend(new Object(), {
     return false;
   },
 
-  addPropertyChangeListener: function (dp, cb) {
-    if (dp == null)
-      this.wildcard_listeners.push (cb);
-      else {
-	if (this.propertychange_listeners[dp] == null)
-	  this.propertychange_listeners[dp] = [];
-	  this.propertychange_listeners[dp].push (cb);
-      }
-  },
-
-  removePropertyChangeListener: function (dp, cb) {
-    if (dp == null) {
-      for (var i = 0; i < this.wildcard_listeners.length; i ++) {
-	if (this.wildcard_listeners[i] == cb) {
-	  this.wildcard_listeners.remove (i);
-	  break;
-	}
-      }
-    }
-    else if (this.propertychange_listeners[dp] != null) {
-      for (var i = 0; i < this.propertychange_listeners[dp].length; i ++) {
-	if ((this.propertychange_listeners[dp])[i] == cb) {
-	  this.propertychange_listeners[dp].remove (i);
-	  break;
-	}
-      }
-    }
-  },
-
   lookupProperty: function (dpName) {
-    return this[dpName + "Property"];
+    var dot = dpName.indexOf ('.');
+    if (dot == -1)
+      return this[dpName + "Property"];
+    else {
+      // it's an attached property, we need to look it up on the class mentioned in the nodeName.
+      var attached_className = dpName.substring (0, dot);
+      Trace.debug ("attached property.  className = " + attached_className);
+
+      // XXX this usage only works for types defined in FirelightConsts.XAMLns
+      var attached_nodeType = XamlTypeResolver.resolveType (attached_className);;
+
+      if (!attached_nodeType)
+	throw new Error ("could not resolve class " + attached_className + "in context of attached property '" + dpName + "'.");
+
+	// we need a better way to look up properties than creating an instance...
+	var n = new attached_nodeType();
+	return n.lookupProperty (dpName.substring (dot + 1));
+    }
   },
 
   addChild: function (child) {
@@ -186,40 +240,59 @@ DependencyObject.prototype = $.extend(new Object(), {
   },
 
   onPropertyChanged: function (args) {
-    // XXX I'm hoping we don't need this method at all
   },
 
-  notifyListenerList: function (list, args) {
-    if (list == null)
-      return;
+  bindProperty: function (bound_dp) {
+    var dp_type = bound_dp.resolvePropertyType();
 
-      var copy = [];
-      for (i = 0; i < list.length; i ++)
-	copy.push (list[i]);
+    if ("SvgPropertyValueProperty" in dp_type) {
+//      console.log (bound_dp + " is bound and has an SvgPropertyValueProperty = " + dp_type.SvgPropertyValueProperty);
+      // this dependency property applies its value into an SVG
+      // attribute.  we add a property change listener on this
+      // internal DP, and update the peer listed in the metadata
+      // (default is this.svgPeer)
+      var peer = bound_dp.metadata.svgPeer ? bound_dp.metadata.svgPeer : "svgPeer";
+      var that = this;
+      // XXX need to figure out a way to do this such that we can remove the listener when the value of DP changes.
+      var obj = this.getValue(bound_dp);
+//      console.log ("applying it to " + peer);
+      obj.addPropertyChangeListener (dp_type.SvgPropertyValueProperty,
+				     function (sender, args) {
+				       if (that["update"+bound_dp.name]) {
+					 that["update"+bound_dp.name] ();
+				       }
+				       else if (that[peer]) {
+//					 console.log (that[peer] + ".setAttribute ( " + bound_dp.metadata.svgAttribute + ", " + args.newValue + ")");
+					 that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
+				       }
+				     });
+      obj.computePropertyValue(); // kick off the machinery
+    }
+    else {
+      var peer = bound_dp.metadata.svgPeer ? bound_dp.metadata.svgPeer : "svgPeer";
+      var that = this;
 
-      for (i = 0; i < copy.length; i ++)
-	copy[i] (this, args);
+      // we assume that it's a primitive type, so we create a binding which is updated when the property is changed.
+      this.addPropertyChangeListener(bound_dp,
+				     function (sender, args) {
+				       if (bound_dp.metadata.cssAttribute)
+					 that[peer].style[bound_dp.metadata.cssAttribute] = args.newValue.toString();
+				       else if (bound_dp.metadata.svgAttribute)
+					 that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
+				       else
+					 throw new Error ("not sure what to do with this primitive type thingy here.");
+				     });
+    }
   },
 
-  notifyListenersOfPropertyChange: function (args) {
-    this.notifyListenerList (this.propertychange_listeners[args.property], args);
-    this.notifyListenerList (this.wildcard_listeners, args);
-  },
-
-  applyToPeer: function (host, change_callback) {
-    Trace.debug ("in dependencyobject.applyToPeer");
-
-    var valueProp = this.lookupProperty ("SvgPropertyValue");
-
-    Trace.debug (valueProp);
-
-    var that = this;
-    this.addPropertyChangeListener (valueProp,
-				    function (args) {
-				      change_callback (that.getValue (valueProp));
-				    });
-
-    // XXX property changes need to be propagated still.
+  initializeBoundProperties: function () {
+    for (var v in this) {
+      if (v.length - v.lastIndexOf ("Property") == "Property".length) {
+	var dp = this[v];
+	if (dp.metadata && (dp.metadata.svgAttribute || dp.metadata.cssAttribute))
+	  this.bindProperty (dp);
+      }
+    }
   },
 
   toString: function () {
