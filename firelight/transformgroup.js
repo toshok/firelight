@@ -1,6 +1,13 @@
 function TransformGroup ()
 {
   Transform.apply (this, arguments);
+
+  // XXX doing this here defeats the lazy nature of our defaultValue
+  var that = this;
+  this.children.addCollectionChangeHandler (function (args) {
+					      that.computePropertyValue();
+					    });
+
 }
 TransformGroup.prototype = $.extend(new Transform(), {
 
@@ -8,16 +15,6 @@ TransformGroup.prototype = $.extend(new Transform(), {
 
   toString: function () {
     return "TransformGroup";
-  },
-
-  applyToPeer: function (host, callback) {
-    var that = this;
-
-    this.children.addCollectionChangeHandler (function (args) {
-						that.computePropertyValue();
-					      });
-
-    Transform.prototype.applyToPeer.apply (this, arguments);
   },
 
   computePropertyValue: function () {
