@@ -163,7 +163,7 @@ DependencyObject.prototype = $.extend(new Object(), {
     if (old_value != new_value || (dp.metadata && dp.metadata.alwaysNotify)) {
       var args = { "property" : dp,
 		   oldValue: old_value,
-		   newValue: new_value };
+		   newValue: this.properties[dp.key] };
 
       this.onPropertyChanged (args);
       if (dp.metadata && dp.metadata.propertyChangedHandler)
@@ -246,7 +246,6 @@ DependencyObject.prototype = $.extend(new Object(), {
     var dp_type = bound_dp.resolvePropertyType();
 
     if ("SvgPropertyValueProperty" in dp_type) {
-//      console.log (bound_dp + " is bound and has an SvgPropertyValueProperty = " + dp_type.SvgPropertyValueProperty);
       // this dependency property applies its value into an SVG
       // attribute.  we add a property change listener on this
       // internal DP, and update the peer listed in the metadata
@@ -256,17 +255,29 @@ DependencyObject.prototype = $.extend(new Object(), {
       // XXX need to figure out a way to do this such that we can remove the listener when the value of DP changes.
       var obj = this.getValue(bound_dp);
 //      console.log ("applying it to " + peer);
-      obj.addPropertyChangeListener (dp_type.SvgPropertyValueProperty,
-				     function (sender, args) {
-				       if (that["update"+bound_dp.name]) {
-					 that["update"+bound_dp.name] ();
-				       }
-				       else if (that[peer]) {
-//					 console.log (that[peer] + ".setAttribute ( " + bound_dp.metadata.svgAttribute + ", " + args.newValue + ")");
-					 that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
-				       }
-				     });
-      obj.computePropertyValue(); // kick off the machinery
+
+      var svgAttributeListener = function (sender, args) {
+	if (that["update"+bound_dp.name]) {
+	  that["update"+bound_dp.name] ();
+	}
+	else if (that[peer]) {
+	  that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
+	}
+      };
+
+      if (obj) {
+	obj.addPropertyChangeListener (dp_type.SvgPropertyValueProperty, svgAttributeListener);
+	obj.computePropertyValue(); // kick off the machinery for the initial value
+      }
+
+      this.addPropertyChangeListener (bound_dp, function (sender, args) {
+					if (args.oldValue)
+					  args.oldValue.removePropertyChangeListener (dp_type.SvgPropertyValueProperty, svgAttributeListener);
+					if (args.newValue) {
+					  args.newValue.addPropertyChangeListener (dp_type.SvgPropertyValueProperty, svgAttributeListener);
+					  args.newValue.computePropertyValue(); // kick off the machinery for the initial value
+					}
+				      });
     }
     else {
       var peer = bound_dp.metadata.svgPeer ? bound_dp.metadata.svgPeer : "svgPeer";
