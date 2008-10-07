@@ -6,6 +6,7 @@
     <Storyboard x:Name="demoAnimation">
       <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="600" Duration="00:00:05" />
+      <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:05" />
     </Storyboard>
   </Canvas.Resources>
 
@@ -75,5 +76,7 @@
       </TransformGroup>
     </TextBlock.RenderTransform>
   </TextBlock>
+
+  <Rectangle x:Name="rect" Opacity="0" Canvas.Left="50" Canvas.Top="180" Width="100" Height="50" RadiusX="5" RadiusY="3" Fill="yellow" Stroke="black" />
 
 </Canvas>
