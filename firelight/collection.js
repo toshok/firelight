@@ -35,10 +35,10 @@ Collection.prototype = $.extend(new DependencyObject(), {
     var handler = null;
     if (item.addPropertyChangeListener) {
       var that = this;
-      handler = function (args) {
-      that.notifyChangeHandlers ({ type: "itemChange",
-				   item: item,
-				   args: args });
+      handler = function (sender, args) {
+	that.notifyChangeHandlers ({ type: "itemChange",
+				     item: item,
+				     args: args });
       };
 
       item.addPropertyChangeListener (null, handler);
@@ -85,7 +85,7 @@ Collection.prototype = $.extend(new DependencyObject(), {
     var handler = null;
     if (item.addPropertyChangeListener) {
       var that = this;
-      handler = function (args) {
+      handler = function (sender, args) {
 	that.notifyChangeHandlers ({ type: "itemChange",
 				     item: item,
 				     args: args });
