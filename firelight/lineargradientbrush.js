@@ -11,13 +11,12 @@ LinearGradientBrush.prototype = $.extend(new GradientBrush(), {
   },
 
   computePropertyValue: function () {
+    GradientBrush.prototype.computePropertyValue.apply (this, arguments);
 
     this.gradientDef.setAttributeNS (null, "x1", this.startPoint.x);
     this.gradientDef.setAttributeNS (null, "y1", this.startPoint.y);
     this.gradientDef.setAttributeNS (null, "x2", this.endPoint.x);
     this.gradientDef.setAttributeNS (null, "y2", this.endPoint.y);
-
-    GradientBrush.prototype.computePropertyValue.apply (this, arguments);
   }
 
 });
