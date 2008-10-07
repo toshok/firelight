@@ -7,6 +7,15 @@ function SvgHost ()
   this.layoutManager = new LayoutManager ();
   this.globalTick = 50;
   this.intervalId = null;
+
+  if (arguments && arguments[0]) {
+    var args = arguments[0];
+    if ("domElement" in args)
+      this.setDOMElement (args.domElement);
+
+    if ("rootVisual" in args)
+      this.setRootVisual (args.rootVisual);
+  }
 }
 
 SvgHost.prototype = {
@@ -28,11 +37,11 @@ SvgHost.prototype = {
       this.rootVisual = v;
 
       if (this.rootVisual) {
-	// let all the nodes in the hierarchy know about the host
-	this.rootVisual.connectHost (this);
-
 	// now iterate over the tree, creating peers
 	var rootPeer = this.rootVisual.createPeer (this);
+
+	// let all the nodes in the hierarchy know about the host
+	this.rootVisual.connectHost (this);
 
 	// and add it to the dom
 	this.content.appendChild (rootPeer);
