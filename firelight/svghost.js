@@ -57,8 +57,12 @@ SvgHost.prototype = {
 	// dump the svg structure to the console
 	var serializer = new XMLSerializer( );
 	var str = serializer.serializeToString( this.root );
-	var pretty = XML( str ).toXMLString( );
-	console.log (pretty);
+	if (typeof (XML) != "undefined") {
+	  var pretty = XML( str ).toXMLString( );
+	  console.log (pretty);
+	}
+	else
+	  console.log (str);
       }
 
       // just for testing - makes it easier to access the rootVisual
