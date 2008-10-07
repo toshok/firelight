@@ -11,7 +11,7 @@ var Trace = {
   DEBUG: 1,
   ERROR: 2,
 
-  level: 0,
+  level: this.ERROR,
 
   debug: function (str) {
     if (this.level & this.DEBUG)
@@ -48,7 +48,7 @@ function logExceptions(func) {
 
     decorated = function() {
 	try {
-	    return orignal.apply(this, arguments);
+	  return orignal.apply(this, arguments);
 	    } catch(exception) {
 		printStackTrace(exception);
 		throw exception;
