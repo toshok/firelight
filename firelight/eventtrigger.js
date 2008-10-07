@@ -1,11 +1,9 @@
 function EventTrigger ()
 {
-  DependencyObject.apply (this, arguments);
+  TriggerBase.apply (this, arguments);
 }
 
-EventTrigger.prototype = $.extend(new DependencyObject(), {
-  contentProperty: "Actions",
-
+EventTrigger.prototype = $.extend(new TriggerBase(), {
   toString: function () {
     return "EventTrigger";
   },
@@ -41,24 +39,11 @@ EventTrigger.prototype = $.extend(new DependencyObject(), {
     };
 
     this.svgPeer.addEventListener (domEvent, eventHandler, false);
-  },
-
-  performActions: function () {
-    var actions = this.actions;
-    for (var i = 0; i < actions.count; i ++) {
-      var action = actions.getItemAt (i);
-      action.performAction (this.obj);
-    }
   }
 });
 
 DependencyProperties.register (EventTrigger, "RoutedEvent",
 			       { propertyType: String
-			       });
-
-DependencyProperties.register (EventTrigger, "Actions",
-			       { propertyType: TriggerActionCollection,
-				 defaultValue: function () { return new TriggerActionCollection (); }
 			       });
 
 Types.registerType ("System.Windows", EventTrigger);
