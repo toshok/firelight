@@ -42,6 +42,9 @@ var XamlReader = {
       nodeType = XamlTypeResolver.resolveType (xmlNode.localName, xmlNode.namespaceURI);
     }
 
+    if (nodeType == null)
+      throw new Error ("unable to resolve type for node: " + xmlNode.nodeName);
+
     // deal with x:Name here
 
     var node = new nodeType();
