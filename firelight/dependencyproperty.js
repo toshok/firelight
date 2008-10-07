@@ -1,41 +1,43 @@
-var DependencyProperties = {
+var DependencyProperties = function () {
 
-  registerAttached: function (ownerType, name, metadata) {
-    var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, true, metadata);
+  /////////////////
+  // public stuff
+  this.registerAttached = function (ownerType, name, metadata) {
+    var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, true, metadata);
 
-    this.registerDependencyProperty (prop);
+    registerDependencyProperty (prop);
 
-    this.defineAccessors (prop);
-
-    return prop;
-  },
-
-  register: function (ownerType, name, metadata) {
-
-    var prop = new DependencyProperty (this.getKey (ownerType, name), ownerType, name, false, metadata);
-
-    this.registerDependencyProperty (prop);
-
-    this.defineAccessors (prop);
+    defineAccessors (prop);
 
     return prop;
-  },
+  };
+
+  this.register = function (ownerType, name, metadata) {
+
+    var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, false, metadata);
+
+    registerDependencyProperty (prop);
+
+    defineAccessors (prop);
+
+    return prop;
+  };
 
 
 
   /////////////////
   // private stuff
-  dependency_properties: {},
+  var dependency_properties = {};
 
-  getKey: function (ownerType, name) {
+  function getKey (ownerType, name) {
     var typeName = ownerType.name;
 
     if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
 
     return typeName + "." + name;
-  },
+  };
 
-  defineAccessors: function (prop) {
+  function defineAccessors (prop) {
     // define the XXXProperty getter on the ownerType
     prop.ownerType.prototype.__defineGetter__ (prop.name + "Property", function () { return prop; });
     // and a setter that just throws an exception
@@ -55,15 +57,17 @@ var DependencyProperties = {
 	if (!prop.metadata || !prop.metadata.readOnly)
 	  prop.ownerType.prototype.__defineSetter__ (downcasedName, function (val) { return this.setValue (prop, val); });
       }
-  },
+  };
 
-  registerDependencyProperty: function (dp) {
+  function registerDependencyProperty (dp) {
 
-    if (this.dependency_properties [ dp.key ] != null) throw ("DependencyProperty " + dp.key + " already registered");
+    if (dependency_properties [ dp.key ] != null) throw ("DependencyProperty " + dp.key + " already registered");
 
-    this.dependency_properties [ dp.key ] = dp;
+    dependency_properties [ dp.key ] = dp;
   }
-};
+
+  return this;
+} ();
 
 function DependencyProperty (key, ownerType, name, attached, metadata) {
   this.key = key;
@@ -71,23 +75,21 @@ function DependencyProperty (key, ownerType, name, attached, metadata) {
   this.ownerType = ownerType;
   this.attached = attached;
   this.metadata = metadata || null;
-}
 
-DependencyProperty.prototype = $.extend (new Object(), {
-  resolvePropertyType: function () {
+  this.resolvePropertyType = function () {
     if ("propertyType" in this)
       return this.propertyType;
 
-    if (this.metadata) {
-      if (this.metadata.propertyType) {
-	this.propertyType = this.metadata.propertyType;
+    if (metadata) {
+      if (metadata.propertyType) {
+	this.propertyType = metadata.propertyType;
       }
-      else if ("defaultValue" in this.metadata) {
+      else if ("defaultValue" in metadata) {
 	var v;
-	if (typeof (this.metadata.defaultValue) == "function")
-	  v = this.metadata.defaultValue ();
+	if (typeof (metadata.defaultValue) == "function")
+	  v = metadata.defaultValue ();
 	else
-	  v = this.metadata.defaultValue;
+	  v = metadata.defaultValue;
 
 	var tof = typeof (v);
 	if (tof == "string")
@@ -110,10 +112,12 @@ DependencyProperty.prototype = $.extend (new Object(), {
     }
 
     return this.propertyType;
-  },
+  };
+}
 
+DependencyProperty.prototype = $.extend (new Object(), {
   toString: function () {
-    return "DependencyProperty: " + this.ownerType.name + "." + this.name + "";
+    return this.key;
   }
 });
 
