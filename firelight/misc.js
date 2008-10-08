@@ -86,6 +86,13 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
+function format (fmt) {
+  if (arguments.length == 0) return null;
+  for (var i = 1; i < arguments.length; i ++)
+    fmt = fmt.replace ("%"+(i-1), arguments[i]);
+  return fmt;
+}
+
 function parseColor (str)
 {
   var n = (/rgb(a?)\s*\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*(\d+))?\)/.exec(str));
