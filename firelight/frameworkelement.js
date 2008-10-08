@@ -166,6 +166,11 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
 
 });
 
+EventManager.registerRoutedEvent (FrameworkElement, "BindingValidationError", "direct");
+EventManager.registerRoutedEvent (FrameworkElement, "LayoutUpdated", "direct");
+EventManager.registerRoutedEvent (FrameworkElement, "Loaded", "direct");
+EventManager.registerRoutedEvent (FrameworkElement, "SizeChanged", "direct");
+
 DependencyProperties.register (FrameworkElement, "Width",
 			       { defaultValue: NaN,
 				 affectsParentMeasure: true });

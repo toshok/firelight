@@ -1,29 +1,4 @@
-var DependencyProperties = function () {
-
-  /////////////////
-  // public stuff
-  this.registerAttached = function (ownerType, name, metadata) {
-    var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, true, metadata);
-
-    registerDependencyProperty (prop);
-
-    defineAccessors (prop);
-
-    return prop;
-  };
-
-  this.register = function (ownerType, name, metadata) {
-
-    var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, false, metadata);
-
-    registerDependencyProperty (prop);
-
-    defineAccessors (prop);
-
-    return prop;
-  };
-
-
+var DependencyProperties = new function () {
 
   /////////////////
   // private stuff
@@ -66,8 +41,30 @@ var DependencyProperties = function () {
     dependency_properties [ dp.key ] = dp;
   }
 
-  return this;
-} ();
+  /////////////////
+  // public stuff
+  return {
+    registerAttached: function (ownerType, name, metadata) {
+      var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, true, metadata);
+
+      registerDependencyProperty (prop);
+
+      defineAccessors (prop);
+
+      return prop;
+    },
+
+    register: function (ownerType, name, metadata) {
+      var prop = new DependencyProperty (getKey (ownerType, name), ownerType, name, false, metadata);
+
+      registerDependencyProperty (prop);
+
+      defineAccessors (prop);
+
+      return prop;
+    }
+  };
+};
 
 function DependencyProperty (key, ownerType, name, attached, metadata) {
   this.key = key;

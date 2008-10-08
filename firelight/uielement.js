@@ -45,6 +45,15 @@ UIElement.prototype = $.extend(new DependencyObject(), {
   }
 });
 
+EventManager.registerRoutedEvent (UIElement, "GotFocus", "bubble");
+EventManager.registerRoutedEvent (UIElement, "KeyDown", "bubble");
+EventManager.registerRoutedEvent (UIElement, "KeyUp", "bubble");
+EventManager.registerRoutedEvent (UIElement, "LostFocus", "bubble");
+EventManager.registerRoutedEvent (UIElement, "MouseEnter", "bubble");
+EventManager.registerRoutedEvent (UIElement, "MouseLeftButtonDown", "bubble");
+EventManager.registerRoutedEvent (UIElement, "MouseLeftButtonUp", "bubble");
+EventManager.registerRoutedEvent (UIElement, "MouseMove", "bubble");
+
 DependencyProperties.register (UIElement, "IsHitTestVisible",
 			       { defaultValue: true });
 DependencyProperties.register (UIElement, "OpacityMask",

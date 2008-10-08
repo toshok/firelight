@@ -11,6 +11,7 @@ JS_SOURCES=	consts.js			\
 		coerceValueHelpers.js		\
 		xamltyperesolver.js		\
 		xamlreader.js			\
+		eventmanager.js			\
 		dependencyproperty.js		\
 		dependencyobject.js		\
 		namescope.js			\
