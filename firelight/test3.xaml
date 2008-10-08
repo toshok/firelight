@@ -7,23 +7,24 @@
       <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="600" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:05" />
+      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="blue" To="orange" Duration="00:00:05" />
     </Storyboard>
   </Canvas.Resources>
 
   <Canvas.Background>
-    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
       <GradientStop Offset="0%" Color="red" />
-      <GradientStop Offset="100%" Color="blue" />
+      <GradientStop x:Name="backcolor1" Offset="100%" Color="blue" />
     </LinearGradientBrush>
   </Canvas.Background>
 
   <!-- children -->
   <Canvas x:Name="child" Width="50" Height="50">
     <Canvas.Background>
-      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+      <RadialGradientBrush Center="50%,50%" RadiusX="0.5" RadiusY="0.75">
         <GradientStop x:Name="color0" Offset="0%" Color="blue" />
         <GradientStop x:Name="color1" Offset="100%" Color="red" />
-      </LinearGradientBrush>
+      </RadialGradientBrush>
     </Canvas.Background>
 
     <Canvas.RenderTransform>

@@ -38,6 +38,7 @@ JS_SOURCES=	consts.js			\
 		gradientbrush.js		\
 		gradientstop.js			\
 		lineargradientbrush.js		\
+		radialgradientbrush.js		\
 		uielementcollection.js		\
 		gradientstopcollection.js	\
 		inline.js			\
@@ -52,6 +53,7 @@ JS_SOURCES=	consts.js			\
 		timeline.js			\
 		timelinecollection.js		\
 		timelinegroup.js		\
+		coloranimation.js		\
 		doubleanimation.js		\
 		storyboard.js			\
 		beginstoryboard.js		\
