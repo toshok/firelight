@@ -85,3 +85,26 @@ Array.prototype.remove = function(from, to) {
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 };
+
+function parseColor (str)
+{
+  var n = (/rgb(a?)\s*\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*(\d+))?\)/.exec(str));
+  if (!n) return null;
+
+  if (n[1] == "a" && !n[5])
+    throw new Error ("rgba colors require an alpha value");
+  else if (n[1] == "" && n[5])
+    throw new Error ("rgb colors don't have an alpha value");
+
+  var c = {
+    r: parseInt (n[2]),
+    g: parseInt (n[3]),
+    b: parseInt (n[4])
+  };
+  if (n[5])
+    c.a = parseInt (n[5]);
+  else
+    c.a = 255;
+
+  return c;
+}
