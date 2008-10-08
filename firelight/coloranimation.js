@@ -26,7 +26,7 @@ ColorAnimation.prototype = $.extend(new Timeline(), {
     if (!this.targetProperty)
       throw new Error ("ColorAnimation unable to find property named '" + targetProperty + "'.");
 
-    // gross, but we need to figure out the rgb values for these colors
+    // gross, but we need to figure out the rgb values for these colors so we can interpolate them
     var r = document.createElementNS (FirelightConsts.SVGns, "rect");
     r.setAttributeNS (null, "fill", this.from);
     this.resolvedFrom = parseColor (document.defaultView.getComputedStyle (r, null).getPropertyValue("fill"));
@@ -55,6 +55,9 @@ ColorAnimation.prototype = $.extend(new Timeline(), {
       this.targetObject.setValue (this.targetProperty, "rgba(" + new_r + ", " + new_g + ", " + new_b + ", " + new_a + ")");
     }
     else /* percent == 1 */ {
+      /* this is just a nicety so that the value of the svg property
+         will be the actual string that the user set for this.To */
+
       this.targetObject.setValue (this.targetProperty, this.to);
     }
   }
