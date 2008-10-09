@@ -25,12 +25,16 @@ function () {
     }
   },
 
-  addItem: function (item) {
+  checkItemType: function (item) {
     if (this.elementType == Object)
       /* everything is allowed */;
     else if (item.isSubclass)
       if (!item.isSubclass (this.elementType))
 	throw new Error (this + " requires children of type " + this.elementType.typeName);
+  },
+
+  addItem: function (item) {
+    this.checkItemType (item);
 
     var index = this.items.length;
 
@@ -79,6 +83,8 @@ function () {
   },
 
   setItemAt: function (index, item) {
+    this.checkItemType (item);
+    
     var old_item = this.items[index];
 
     if (old_item.handler)
