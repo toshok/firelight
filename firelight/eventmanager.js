@@ -6,7 +6,7 @@ var EventManager = new function () {
   }
 
   function getKey (ownerType, name) {
-    var typeName = ownerType.name;
+    var typeName = ownerType.typeName;
 
     if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
 
@@ -34,7 +34,7 @@ var EventManager = new function () {
       registerEvent (evt);
 
       defineAccessors (evt);
-      
+
       return evt;
     }
   }

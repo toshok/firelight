@@ -1,12 +1,6 @@
-function Shape ()
+RegisterType ("System.Windows.Shapes", "Shape",
+	      FrameworkElement, null,
 {
-  FrameworkElement.apply (this, arguments);
-}
-
-Shape.prototype = $.extend(new FrameworkElement(), {
-    toString: function () {
-	return "Shape";
-    }
 });
 
 DependencyProperties.register (Shape, "Fill",
@@ -15,5 +9,3 @@ DependencyProperties.register (Shape, "Fill",
 DependencyProperties.register (Shape, "Stroke",
 			       { propertyType: Brush,
 				 svgAttribute: "stroke" }); // affectsMeasure?
-
-Types.registerType ("System.Windows.Shapes", Shape);

@@ -1,14 +1,6 @@
-function Rectangle ()
+RegisterType ("System.Windows.Shapes", "Rectangle",
+	      Shape, null,
 {
-  Shape.apply (this, arguments);
-}
-
-Rectangle.prototype = $.extend(new Shape(), {
-  toString: function () {
-    return "Rectangle";
-  },
-
-
   measureOverride: function (availableSize) {
     Trace.debug ("in Rectangle.measureOverride");
     var result = Shape.prototype.measureOverride.call (this, availableSize);
@@ -38,7 +30,7 @@ Rectangle.prototype = $.extend(new Shape(), {
       var trigger = triggers.getItemAt (t);
       trigger.hookupTrigger (this, this.svgPeer);
     }
-    
+
     return this.svgPeer;
   }
 });
@@ -52,5 +44,3 @@ DependencyProperties.register (Rectangle, "RadiusY",
 			       { defaultValue: 0.0,
 				 affectsRender: true,
 				 svgAttribute: "ry" });
-
-Types.registerType ("System.Windows.Shapes", Rectangle);

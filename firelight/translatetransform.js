@@ -1,17 +1,10 @@
-function TranslateTransform ()
+RegisterType ("System.Windows.Media", "TranslateTransform",
+	      Transform, null,
 {
-  Transform.apply (this, arguments);
-}
-TranslateTransform.prototype = $.extend(new Transform(), {
-  toString: function () {
-    return "TranslateTransform";
-  },
-
   computePropertyValue: function () {
     return "translate(" + this.x + "," + this.y + ")";
   }
 });
-Types.registerType ("System.Windows.Media", TranslateTransform);
 
 DependencyProperties.register (TranslateTransform, "X",
 			       { defaultValue: 0 });

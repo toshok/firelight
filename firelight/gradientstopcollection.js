@@ -1,12 +1,4 @@
-function GradientStopCollection ()
+RegisterType ("System.Windows.Media", "GradientStopCollection",
+	      Collection, null,
 {
-  Collection.apply (this, arguments);
-}
-
-GradientStopCollection.prototype = $.extend(new Collection(), {
-  toString: function () {
-    return "GradientStopCollection";
-  }
 });
-
-Types.registerType ("System.Windows.Media", GradientStopCollection);

@@ -1,14 +1,11 @@
-function Brush ()
-{
-    DependencyObject.apply (this, arguments);
-}
-
-Brush.prototype = $.extend(new DependencyObject(), {
-    coerceValueToType: coerceValueToBrush
-});
+RegisterType ("System.Windows.Media", // namespace
+	      "Brush",                // type name
+	      DependencyObject,       // parent type
+	      null,
+	      {
+		coerceValueToType: coerceValueToBrush
+	      });
 
 DependencyProperties.register (Brush, "SvgPropertyValue",
 			       { defaultValue: "",
 				 alwaysNotify: true });
-
-Types.registerType ("System.Windows.Media", Brush);

@@ -1,12 +1,6 @@
-function SkewTransform ()
+RegisterType ("System.Windows.Media", "SkewTransform",
+	      Transform, null,
 {
-  Transform.apply (this, arguments);
-}
-SkewTransform.prototype = $.extend(new Transform(), {
-  toString: function () {
-    return "SkewTransform";
-  },
-
   computePropertyValue: function () {
     var val = "";
     if (this.x)
@@ -16,7 +10,6 @@ SkewTransform.prototype = $.extend(new Transform(), {
     return val;
   }
 });
-Types.registerType ("System.Windows.Media", SkewTransform);
 
 DependencyProperties.register (SkewTransform, "X",
 			       { defaultValue: 0 });

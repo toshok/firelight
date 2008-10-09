@@ -1,14 +1,14 @@
-function Panel ()
+RegisterType ("System.Windows.Controls", "Panel",
+	      FrameworkElement,
+function ()
 {
-  FrameworkElement.apply (this, arguments);
-
   // XXX there has to be an easier way to do this...
   var panel = this;
   var callback = panel.childrenChanged;
   this.children.addCollectionChangeHandler (function (sender, args) { callback.apply (panel, arguments); });
-}
+},
 
-Panel.prototype = $.extend(new FrameworkElement(), {
+{
   contentProperty: "Children",
 
   childrenChanged: function (col, args) {
@@ -20,10 +20,6 @@ Panel.prototype = $.extend(new FrameworkElement(), {
       args.oldItem.setVisualParent (null);
     if (args.type == "change" || args.type == "add")
       args.newItem.setVisualParent (this);
-  },
-
-  toString: function () {
-    return "Panel";
   },
 
   getLogicalChildren: function () {
@@ -39,5 +35,3 @@ DependencyProperties.register (Panel, "Background",
 			       { propertyType: Brush,
 				 svgAttribute: "fill",
 				 svgPeer: "rectPeer" } );
-
-Types.registerType ("System.Windows.Controls", Panel);

@@ -5,7 +5,7 @@ var DependencyProperties = new function () {
   var dependency_properties = {};
 
   function getKey (ownerType, name) {
-    var typeName = ownerType.name;
+    var typeName = ownerType.typeName;
 
     if (!typeName) throw "unable to determine type name when registering '" + name + "' property";
 

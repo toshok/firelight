@@ -1,12 +1,4 @@
-function InlineCollection ()
+RegisterType ("System.Windows.Documents", "InlineCollection",
+	      Collection, null,
 {
-  Collection.apply (this, arguments);
-}
-
-InlineCollection.prototype = $.extend(new Collection(), {
-  toString: function () {
-    return "InlineCollection";
-  }
 });
-
-Types.registerType ("System.Windows.Documents", InlineCollection);

@@ -1,7 +1,7 @@
-function FrameworkElement ()
-{
-  UIElement.apply (this, arguments);
-
+RegisterType ("System.Windows",
+	      "FrameworkElement",
+	      UIElement,
+function () {
   this.renderPosition = new Point (0,0);
   this.renderSize = new Size (NaN,NaN);
 
@@ -15,9 +15,8 @@ function FrameworkElement ()
 					    this.svgPeer.setAttributeNS (null, "height", String(this.renderSize.height));
 					  }
 					});
-}
-
-FrameworkElement.prototype = $.extend(new UIElement(), {
+},
+{
   findName : function (name) {
     // look up the visual (XXX should be logical) tree for an element
     // with a namescope
@@ -77,10 +76,6 @@ FrameworkElement.prototype = $.extend(new UIElement(), {
   setRenderPosition: function (point) {
     this.renderPosition = point;
     this.renderPositionBinding.update();
-  },
-
-  toString: function () {
-    return "FrameworkElement";
   },
 
   measure: function (availableSize) {
@@ -207,5 +202,3 @@ DependencyProperties.register (FrameworkElement, "Resources",
 DependencyProperties.register (FrameworkElement, "Triggers",
 			       { defaultValue: function () { return new TriggerCollection(); },
 				 propertyType: TriggerCollection });
-
-Types.registerType ("System.Windows", FrameworkElement);

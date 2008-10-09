@@ -1,9 +1,6 @@
-function GradientBrush ()
+RegisterType ("System.Windows.Media", "GradientBrush",
+	      Brush, null,
 {
-  Brush.apply (this, arguments);
-}
-
-GradientBrush.prototype = $.extend(new Brush(), {
   contentProperty: "GradientStops",
 
   computePropertyValue: function () {
@@ -43,5 +40,3 @@ GradientBrush.prototype = $.extend(new Brush(), {
 DependencyProperties.register (GradientBrush, "GradientStops",
 			       { defaultValue: function () { return new GradientStopCollection (); },
 				 readOnly: true } );
-
-Types.registerType ("System.Windows.Media", GradientBrush);

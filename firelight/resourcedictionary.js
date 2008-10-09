@@ -1,11 +1,11 @@
-function ResourceDictionary ()
+RegisterType ("System.Windows", "ResourceDictionary",
+	      Collection,
+function ()
 {
-  Collection.apply (this, arguments);
   this.map = { };
-}
+},
 
-ResourceDictionary.prototype = $.extend(new Collection(), {
-
+{
   getLogicalChildren: function () {
     return this;
   },
@@ -41,11 +41,5 @@ ResourceDictionary.prototype = $.extend(new Collection(), {
     delete this.map[key];
 
     Collection.prototype.removeItem.apply (this, [val]);
-  },
-
-  toString: function () {
-    return "ResourceDictionary";
   }
 });
-
-Types.registerType ("System.Windows", ResourceDictionary);

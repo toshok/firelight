@@ -1,21 +1,16 @@
-function TransformGroup ()
+RegisterType ("System.Windows.Media", "TransformGroup",
+	      Transform,
+function ()
 {
-  Transform.apply (this, arguments);
-
-  // XXX doing this here defeats the lazy nature of our defaultValue
   var that = this;
   this.children.addCollectionChangeHandler (function (args) {
 					      that.computePropertyValue();
 					    });
 
-}
-TransformGroup.prototype = $.extend(new Transform(), {
+},
 
+{
   contentProperty: "Children",
-
-  toString: function () {
-    return "TransformGroup";
-  },
 
   computePropertyValue: function () {
     var str = "";
@@ -26,8 +21,6 @@ TransformGroup.prototype = $.extend(new Transform(), {
     this.svgPropertyValue = str;
   }
 });
-
-Types.registerType ("System.Windows.Media", TransformGroup);
 
 DependencyProperties.register (TransformGroup, "Children",
 			       { defaultValue: function () { return new TransformCollection(); },

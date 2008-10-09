@@ -1,14 +1,7 @@
-function LinearGradientBrush ()
+RegisterType ("System.Windows.Media", "LinearGradientBrush",
+	      GradientBrush, null,
 {
-  GradientBrush.apply (this, arguments);
-}
-
-LinearGradientBrush.prototype = $.extend(new GradientBrush(), {
   svgGradientElement: "linearGradient",
-
-  toString: function () {
-    return "LinearGradientBrush";
-  },
 
   computePropertyValue: function () {
     GradientBrush.prototype.computePropertyValue.apply (this, arguments);
@@ -29,5 +22,3 @@ DependencyProperties.register (LinearGradientBrush, "EndPoint",
                                { defaultValue: function () { return { x: 1, y: 0 }; },
 				 propertyType: Point,
 				 coerceValue: coerceValueToPoint });
-
-Types.registerType ("System.Windows.Media", LinearGradientBrush);

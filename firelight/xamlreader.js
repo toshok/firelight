@@ -151,7 +151,7 @@ var XamlReader = {
 
 	      var propertyNode = this.createElementFromXmlNode (pn, namescope, false);
 
-	      if (!collection || dp.resolvePropertyType() == propertyNode.__proto__) {
+	      if (!collection || dp.resolvePropertyType() == propertyNode.type) {
 		node.setValue (dp, propertyNode);
 		more_children_allowed = false;
 	      }

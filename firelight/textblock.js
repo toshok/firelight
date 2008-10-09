@@ -1,14 +1,7 @@
-function TextBlock ()
+RegisterType ("System.Windows.Controls", "TextBlock",
+	      FrameworkElement, null,
 {
-  FrameworkElement.apply (this, arguments);
-}
-
-TextBlock.prototype = $.extend(new FrameworkElement(), {
   contentProperty: "Inlines",
-
-  toString: function () {
-    return "TextBlock";
-  },
 
   onPropertyChanged: function (args) {
     if (args.property == TextBlock.TextProperty) {
@@ -65,5 +58,3 @@ DependencyProperties.register (TextBlock, "FontWeight",
 			       { defaultValue: "Normal", // should be the font weight enum..
 				 affectsMeasure: true,
 				 svgAttribute: "font-weight" });
-
-Types.registerType ("System.Windows.Controls", TextBlock);

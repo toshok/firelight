@@ -1,16 +1,12 @@
-function Collection ()
+RegisterType ("System.Windows",
+	      "Collection",
+	      DependencyObject,
+function () {
+  this.items = [];
+  this.changeHandlers = [];
+},
+
 {
-    DependencyObject.apply (this, arguments);
-
-    this.items = [];
-    this.changeHandlers = [];
-}
-
-Collection.prototype = $.extend(new DependencyObject(), {
-  toString: function () {
-    return "Collection";
-  },
-
   // the interface the parser uses
   addChild: function (child) {
     this.addItem (child);
@@ -118,5 +114,3 @@ Collection.prototype = $.extend(new DependencyObject(), {
 DependencyProperties.register (Collection, "Count",
 			       { defaultValue: 0,
 				 readOnly: true });
-
-Types.registerType ("System.Windows", Collection);

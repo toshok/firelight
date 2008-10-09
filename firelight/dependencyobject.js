@@ -1,10 +1,9 @@
-function DependencyObject ()
-{
+RegisterType ("System.Windows",
+	      "DependencyObject",
+	      null,
+function () {
   this.host = null;
   this.properties = {};
-
-  this.type = this.__proto__;
-
 
   // property change listeners
   this.addPropertyChangeListener = function (dp, cb) {
@@ -67,9 +66,9 @@ function DependencyObject ()
 	this.setValue(prop, arguments[0][k]);
     }
   }
-}
+},
 
-DependencyObject.prototype = $.extend(new Object(), {
+{
   connectHost: function (host) {
     if (this.host)
       throw new Error ("cannot attach a dependency object to two different hosts.");
@@ -118,7 +117,7 @@ DependencyObject.prototype = $.extend(new Object(), {
     return null;
   },
 
-  setValue: function (dp, new_value) {
+  setValue: logExceptions (function (dp, new_value) {
     if (!dp || !(dp instanceof DependencyProperty))
       throw new Error ("setValue requires valid DependencyProperty");
 
@@ -126,6 +125,8 @@ DependencyObject.prototype = $.extend(new Object(), {
       throw new Error ("setValue(" + dp + ") passed an undefined value");
 
     //if (dp.readonly) throw new "Attempting to set a value on read-only property '" + dp.name + "'";
+    if (!this.properties)
+      throw new Error ();
     var old_value = this.properties[dp.key];
 
     var propertyType = dp.resolvePropertyType ();
@@ -170,7 +171,7 @@ DependencyObject.prototype = $.extend(new Object(), {
 	dp.metadata.propertyChangedHandler.apply (this, [args]);
 	this.notifyListenersOfPropertyChange (args);
     }
-  },
+  }),
 
   getValue: function (dp) {
     if (!(dp.key in this.properties)) {
@@ -189,12 +190,12 @@ DependencyObject.prototype = $.extend(new Object(), {
 
   isSubclass: function (type) {
     var type_proto = type.prototype;
-    var proto = this.__proto__;
-    while (proto) {
+    var type = this.type;
+    while (type) {
 //      Trace.debug ("isSubclass (" + proto + ", " + type.prototype + ")");
-      if (proto == type_proto)
+      if (type == type_proto)
 	return true;
-      proto = proto.__proto__;
+      type = type.type;
     }
     return false;
   },
@@ -304,15 +305,9 @@ DependencyObject.prototype = $.extend(new Object(), {
 	  this.bindProperty (dp);
       }
     }
-  },
-
-  toString: function () {
-    return "DependencyObject";
   }
 });
 
 DependencyProperties.register (DependencyObject, "Name",
 			       { propertyType: String });
-
-Types.registerType ("System.Windows", DependencyObject);
 

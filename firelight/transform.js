@@ -1,17 +1,10 @@
-function Transform ()
+RegisterType ("System.Windows.Media", "Transform",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-Transform.prototype = $.extend(new DependencyObject(), {
-  toString: function () {
-    return "Transform";
-  }
 });
 
 DependencyProperties.register (Transform, "SvgPropertyValue",
 			       { defaultValue: "",
 				 alwaysNotify: true });
-
-Types.registerType ("System.Windows.Media", Transform);
 
 //Types.registerType ("System.Windows.Media", MatrixTransform);

@@ -1,14 +1,7 @@
-function RadialGradientBrush ()
+RegisterType ("System.Windows.Media", "RadialGradientBrush",
+	      GradientBrush, null,
 {
-  GradientBrush.apply (this, arguments);
-}
-
-RadialGradientBrush.prototype = $.extend(new GradientBrush(), {
   svgGradientElement: "radialGradient",
-
-  toString: function () {
-    return "RadialGradientBrush";
-  },
 
   computePropertyValue: function () {
     GradientBrush.prototype.computePropertyValue.apply (this, arguments);
@@ -44,5 +37,3 @@ DependencyProperties.register (RadialGradientBrush, "RadiusX",
                                { defaultValue: 0.5 });
 DependencyProperties.register (RadialGradientBrush, "RadiusY",
                                { defaultValue: 0.5 });
-
-Types.registerType ("System.Windows.Media", RadialGradientBrush);

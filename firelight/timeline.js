@@ -1,9 +1,6 @@
-function Timeline ()
+RegisterType ("System.Windows.Media.Animation", "Timeline",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-
-Timeline.prototype = $.extend(new DependencyObject(), {
   calculateDuration: function () {
     console.log ("in Timeline.calculateDuration");
     if (this.duration.equals (Duration.automatic))
@@ -71,5 +68,3 @@ DependencyProperties.register (Timeline, "RepeatBehavior",
 
 DependencyProperties.register (Timeline, "SpeedRatio",
 			       { propertyType: Number });
-
-Types.registerType ("System.Windows.Media.Animation", Timeline);

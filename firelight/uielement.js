@@ -1,10 +1,11 @@
-function UIElement ()
+RegisterType ("System.Windows", "UIElement",
+	      DependencyObject,
+function ()
 {
-  DependencyObject.apply (this, arguments);
   this.visualLevel = 0;
-}
+},
 
-UIElement.prototype = $.extend(new DependencyObject(), {
+{
   addEventListener: function (eventName, callback) {
     Trace.debug ("XXX addEventListener needs implementing");
   },
@@ -38,10 +39,6 @@ UIElement.prototype = $.extend(new DependencyObject(), {
   },
 
   updateLayout: function () {
-  },
-
-  toString: function () {
-    return "UIElement";
   }
 });
 
@@ -68,5 +65,3 @@ DependencyProperties.register (UIElement, "RenderTransform",
 				 propertyType: Transform,
 				 affectsRender: true,
 				 svgAttribute: "transform" });// something more here?
-
-Types.registerType ("System.Windows", UIElement);

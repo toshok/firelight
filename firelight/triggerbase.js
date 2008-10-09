@@ -1,9 +1,6 @@
-function TriggerBase ()
+RegisterType ("System.Windows", "TriggerBase",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-
-TriggerBase.prototype = $.extend(new DependencyObject(), {
   contentProperty: "Actions",
 
   performActions: function () {
@@ -19,5 +16,3 @@ DependencyProperties.register (TriggerBase, "Actions",
 			       { propertyType: TriggerActionCollection,
 				 defaultValue: function () { return new TriggerActionCollection (); }
 			       });
-
-Types.registerType ("System.Windows", TriggerBase);

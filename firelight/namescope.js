@@ -1,14 +1,10 @@
-function NameScope ()
+RegisterType ("System.Windows", "NameScope",
+	      DependencyObject,
+function ()
 {
-  DependencyObject.apply (this, arguments);
   this.names = { };
-}
-
-NameScope.prototype = $.extend (new DependencyObject(), {
-  toString: function () {
-    return "NameScope";
-  },
-
+},
+{
   registerName: function (name, obj) {
     if (name in this.names)
       throw new Error ("name '" + name + "' is already registered in this namescope.");

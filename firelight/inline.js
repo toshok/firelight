@@ -1,15 +1,7 @@
-function Inline ()
+RegisterType ("System.Windows.Documents", "Inline",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-
-Inline.prototype = $.extend(new DependencyObject(), {
-  contentProperty: "Text",
-
-  toString: function () {
-    return "Run";
-  }
-
+  contentProperty: "Text"
 });
 
 DependencyProperties.register (Inline, "Foreground",
@@ -47,5 +39,3 @@ DependencyProperties.register (Inline, "FontWeight",
 				   if (this.svgPeer)
 				     this.svgPeer.setAttributeNS (null, "font-weight", args.newValue);
 				 } } );
-
-Types.registerType ("System.Windows.Documents", Inline);

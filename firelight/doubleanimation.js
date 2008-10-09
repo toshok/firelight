@@ -1,13 +1,8 @@
-function DoubleAnimation ()
+RegisterType ("System.Windows.Media.Animation",
+	      "DoubleAnimation",
+	      Timeline,
+	      null,
 {
-  Timeline.apply (this, arguments);
-}
-
-DoubleAnimation.prototype = $.extend(new Timeline(), {
-  toString: function () {
-    return "DoubleAnimation";
-  },
-
   resolve: function () {
     var targetName = Storyboard.getTargetName (this);
     if (!targetName)
@@ -53,5 +48,3 @@ DependencyProperties.register (DoubleAnimation, "From",
 			       { propertyType: Number });
 DependencyProperties.register (DoubleAnimation, "To",
 			       { propertyType: Number });
-
-Types.registerType ("System.Windows.Media.Animation", DoubleAnimation);

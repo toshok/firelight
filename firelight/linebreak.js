@@ -1,9 +1,6 @@
-function LineBreak ()
+RegisterType ("System.Windows.Documents", "LineBreak",
+	      Inline, null,
 {
-  Inline.apply (this, arguments);
-}
-
-LineBreak.prototype = $.extend(new Inline(), {
   createPeer: function (host) {
     this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "tspan");
 
@@ -14,5 +11,3 @@ LineBreak.prototype = $.extend(new Inline(), {
     return this.svgPeer;
   }
 });
-
-Types.registerType ("System.Windows.Documents", LineBreak);

@@ -28,9 +28,8 @@ var Types = function () {
 
     registerType: function (ns, t) {
       var nsobj = registerNamespace (ns);
-      var typeName = t.name;
-      if (!typeName) throw new Error ("could not determine type name to register");
-      nsobj[typeName] = t;
+      if (!t.typeName) throw new Error ("could not determine type name to register");
+      nsobj[t.typeName] = t;
     }
   };
 } ();

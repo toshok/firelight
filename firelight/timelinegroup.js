@@ -1,9 +1,6 @@
-function TimelineGroup ()
+RegisterType ("System.Windows.Media.Animation", "TimelineGroup",
+	      Timeline, null,
 {
-  Timeline.apply (this, arguments);
-}
-
-TimelineGroup.prototype = $.extend(new Timeline(), {
   contentProperty: "Children",
 
   calculateDuration: function () {
@@ -58,10 +55,6 @@ TimelineGroup.prototype = $.extend(new Timeline(), {
       var child = this.children.getItemAt(i);
       child.resetState ();
     }
-  },
-
-  toString: function () {
-    return "TimelineGroup";
   }
 });
 
@@ -69,5 +62,3 @@ DependencyProperties.register (TimelineGroup, "Children",
 			       { propertyType: TimelineCollection,
 				 defaultValue: function () { return new TimelineCollection (); }
 			       });
-
-Types.registerType ("System.Windows.Media.Animation", TimelineGroup);

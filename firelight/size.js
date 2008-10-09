@@ -38,9 +38,5 @@ Size.prototype = {
 	else {
 	    return new Size (this.width - w, this.height - h);
 	}
-    },
-
-    toString: function () {
-	return this.width + "," + this.height;
     }
 };

@@ -1,13 +1,8 @@
-function ColorAnimation ()
+RegisterType ("System.Windows.Media.Animation",
+	      "ColorAnimation",
+	      Timeline,
+	      null,
 {
-  Timeline.apply (this, arguments);
-}
-
-ColorAnimation.prototype = $.extend(new Timeline(), {
-  toString: function () {
-    return "ColorAnimation";
-  },
-
   resolve: function () {
     var targetName = Storyboard.getTargetName (this);
     if (!targetName)
@@ -70,5 +65,3 @@ DependencyProperties.register (ColorAnimation, "From",
 			       { propertyType: String });
 DependencyProperties.register (ColorAnimation, "To",
 			       { propertyType: String });
-
-Types.registerType ("System.Windows.Media.Animation", ColorAnimation);

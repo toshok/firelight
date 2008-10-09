@@ -1,13 +1,6 @@
-function Setter ()
+RegisterType ("System.Windows", "Setter",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-
-Setter.prototype = $.extend (new DependencyObject(), {
-  toString: function () {
-    return "Setter";
-  },
-
   performAction: function (obj) {
     Trace.debug ("i should be setting " + this.targetName + "." + this.property + " = " + this.value);
 
@@ -29,5 +22,3 @@ DependencyProperties.register (Setter, "Property",
 			       { defaultValue: "" });
 DependencyProperties.register (Setter, "Value",
 			       { defaultValue: "" });
-
-Types.registerType ("System.Windows", Setter);

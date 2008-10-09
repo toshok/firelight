@@ -1,13 +1,6 @@
-function Trigger ()
+RegisterType ("System.Windows", "Trigger",
+	      TriggerBase, null,
 {
-  TriggerBase.apply (this, arguments);
-}
-
-Trigger.prototype = $.extend(new TriggerBase(), {
-  toString: function () {
-    return "Trigger";
-  },
-
   hookupTrigger: function (obj, peer) {
 
     var trigger_obj = obj;
@@ -51,5 +44,3 @@ DependencyProperties.register (Trigger, "Value",
 			       { propertyType: String,
 				 defaultValue: ""
 			       });
-
-Types.registerType ("System.Windows", Trigger);

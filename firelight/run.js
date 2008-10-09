@@ -1,14 +1,7 @@
-function Run ()
+RegisterType ("System.Windows.Documents", "Run",
+	      Inline, null,
 {
-  Inline.apply (this, arguments);
-}
-
-Run.prototype = $.extend(new Inline(), {
   contentProperty: "Text",
-
-  toString: function () {
-    return "Run";
-  },
 
   createPeer: function (host) {
     this.svgPeer = document.createElementNS (FirelightConsts.SVGns, "tspan");
@@ -27,5 +20,3 @@ Run.prototype = $.extend(new Inline(), {
 
 DependencyProperties.register (Run, "Text",
 			       { defaultValue: "" });
-
-Types.registerType ("System.Windows.Documents", Run);

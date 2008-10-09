@@ -1,13 +1,8 @@
-function Canvas ()
+RegisterType ("System.Windows.Controls",
+	      "Canvas",
+	      Panel,
+	      null,
 {
-  Panel.apply (this, arguments);
-}
-
-Canvas.prototype = $.extend(new Panel(), {
-  toString: function () {
-    return "Canvas";
-  },
-
   measureOverride: function (availableSize) {
     Trace.debug ("BEGIN Canvas.measureOverride (" + this.name + "), availableSize = " + availableSize);
     var result = FrameworkElement.prototype.measureOverride.call (this, availableSize);
@@ -89,5 +84,3 @@ DependencyProperties.registerAttached (Canvas, "Top",
 DependencyProperties.registerAttached (Canvas, "ZIndex",
 				       { defaultValue: 0,
 					 affectsRender: true });
-
-Types.registerType ("System.Windows.Controls", Canvas);

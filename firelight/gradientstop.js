@@ -1,12 +1,6 @@
-function GradientStop ()
+RegisterType ("System.Windows.Media", "GradientStop",
+	      DependencyObject, null,
 {
-  DependencyObject.apply (this, arguments);
-}
-
-GradientStop.prototype = $.extend(new DependencyObject(), {
-  toString: function () {
-    return "GradientStop";
-  }
 });
 
 DependencyProperties.register (GradientStop, "Color",
@@ -14,5 +8,3 @@ DependencyProperties.register (GradientStop, "Color",
 
 DependencyProperties.register (GradientStop, "Offset",
 			       { defaultValue: "0%" });
-
-Types.registerType ("System.Windows.Media", GradientStop);

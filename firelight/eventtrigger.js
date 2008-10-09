@@ -1,13 +1,8 @@
-function EventTrigger ()
+RegisterType ("System.Windows",
+	      "EventTrigger",
+	      TriggerBase,
+	      null,
 {
-  TriggerBase.apply (this, arguments);
-}
-
-EventTrigger.prototype = $.extend(new TriggerBase(), {
-  toString: function () {
-    return "EventTrigger";
-  },
-
   mapRoutedEventToDOMEvent: function (ev) {
     switch (ev) {
       case "MouseMove": return "mousemove";
@@ -45,5 +40,3 @@ EventTrigger.prototype = $.extend(new TriggerBase(), {
 DependencyProperties.register (EventTrigger, "RoutedEvent",
 			       { propertyType: String
 			       });
-
-Types.registerType ("System.Windows", EventTrigger);

@@ -49,10 +49,10 @@ function logExceptions(func) {
     decorated = function() {
 	try {
 	  return orignal.apply(this, arguments);
-	    } catch(exception) {
-		printStackTrace(exception);
-		throw exception;
-	    }
+	} catch(exception) {
+	  printStackTrace(exception);
+	  throw exception;
+	}
     };
 
     return decorated;
@@ -114,4 +114,20 @@ function parseColor (str)
     c.a = 255;
 
   return c;
+}
+
+function RegisterType (namespace, typeName, parentType, initFunc, prototypeStuff) {
+  var ctor = function () {
+    if (parentType) parentType.apply (this, arguments);
+    if (initFunc) initFunc.apply (this, arguments);
+    this.type = ctor.prototype;
+  }
+  ctor.typeName = typeName;
+  ctor.prototype = $.extend (parentType ? new parentType() : {}, prototypeStuff);
+  ctor.prototype.toString = function () { return typeName; };
+
+  // XXX remove this at some point soon once all the DP registration and usage of types is fully qualified
+  window[typeName] = ctor;
+
+  logExceptions (Types.registerType (namespace, ctor, typeName));
 }
