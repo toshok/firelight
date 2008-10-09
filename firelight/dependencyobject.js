@@ -2,10 +2,70 @@ RegisterType ("System.Windows",
 	      "DependencyObject",
 	      null,
 function () {
+  var propertychange_listeners = {};
+  var event_listeners = {};
+  var wildcard_listeners = [];
+
+  function lookupNamedField (name, suffix) {
+    var dot = name.indexOf ('.');
+    if (dot == -1)
+      return this[name + suffix];
+    else {
+      // it's an attached property/event, we need to look it up on the class mentioned in the nodeName.
+      var attached_className = name.substring (0, dot);
+
+      // XXX this usage only works for types defined in FirelightConsts.XAMLns
+      var attached_nodeType = XamlTypeResolver.resolveType (attached_className);;
+
+      if (!attached_nodeType)
+	throw new Error ("could not resolve class " + attached_className + "in context of attached property '" + name + "'.");
+
+	// we need a better way to look up properties than creating an instance...
+	var n = new attached_nodeType();
+	return n.lookupNamedField (name.substring (dot + 1));
+    }
+  };
+
   this.host = null;
   this.properties = {};
 
+  // event listeners
+  this.lookupEvent = function (name) {
+    return lookupNamedField (name, "Event");
+  };
+
+  this.addEventListener = function (evt, cb) {
+    if (typeof (evt) == "string")
+      evt = this.lookupEvent (evt);
+    if (evt == null)
+      throw new Error ("invalid event");
+
+    if (event_listeners[evt] == null)
+      event_listeners[evt] = [,]; // we do this so that element 0 is already allocated for the xaml reader
+    event_listeners[evt].push (cb);
+  };
+
+  this.removeEventListener = function (evt, cb) {
+    if (typeof (evt) == "string")
+      evt = this.lookupEvent (evt);
+    if (evt == null)
+      throw new Error ("invalid event");
+
+    if (event_listeners[evt] != null) {
+      for (var i = 0; i < event_listeners[evt].length; i ++) {
+	if ((event_listeners[evt])[i] == cb) {
+	  event_listeners[evt].remove (i);
+	  break;
+	}
+      }
+    }
+  };
+
   // property change listeners
+  this.lookupProperty = function (name) {
+    return lookupNamedField (name, "Property");
+  };
+
   this.addPropertyChangeListener = function (dp, cb) {
     if (dp == null)
       wildcard_listeners.push (cb);
@@ -51,8 +111,6 @@ function () {
       for (i = 0; i < copy.length; i ++)
 	copy[i] (this, args);
   };
-  var propertychange_listeners = {};
-  var wildcard_listeners = [];
 
   // the optional arguments are:
   // arg[0] = parameters
@@ -198,27 +256,6 @@ function () {
       type = type.type;
     }
     return false;
-  },
-
-  lookupProperty: function (dpName) {
-    var dot = dpName.indexOf ('.');
-    if (dot == -1)
-      return this[dpName + "Property"];
-    else {
-      // it's an attached property, we need to look it up on the class mentioned in the nodeName.
-      var attached_className = dpName.substring (0, dot);
-      Trace.debug ("attached property.  className = " + attached_className);
-
-      // XXX this usage only works for types defined in FirelightConsts.XAMLns
-      var attached_nodeType = XamlTypeResolver.resolveType (attached_className);;
-
-      if (!attached_nodeType)
-	throw new Error ("could not resolve class " + attached_className + "in context of attached property '" + dpName + "'.");
-
-	// we need a better way to look up properties than creating an instance...
-	var n = new attached_nodeType();
-	return n.lookupProperty (dpName.substring (dot + 1));
-    }
   },
 
   addChild: function (child) {
