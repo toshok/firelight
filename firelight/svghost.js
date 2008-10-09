@@ -1,6 +1,6 @@
 function SvgHost ()
 {
-  var defaultTick = 50;
+  var defaultTick = 30;
 
 
   this.root = null;
