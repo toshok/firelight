@@ -6,10 +6,11 @@ function () {
   var event_listeners = {};
   var wildcard_listeners = [];
 
+  var that = this;
   function lookupNamedField (name, suffix) {
     var dot = name.indexOf ('.');
     if (dot == -1)
-      return this[name + suffix];
+      return that[name + suffix];
     else {
       // it's an attached property/event, we need to look it up on the class mentioned in the nodeName.
       var attached_className = name.substring (0, dot);
@@ -42,23 +43,32 @@ function () {
 
     if (event_listeners[evt] == null)
       event_listeners[evt] = [,]; // we do this so that element 0 is already allocated for the xaml reader
-    event_listeners[evt].push (cb);
+    for (var i = 1; i < event_listeners[evt]; i ++) {
+      if (!event_listeners[evt][i]) {
+	event_listeners[evt][i] = cb;
+	return i;
+      }
+    }
+
+    return event_listeners[evt].push (cb) - 1;
   };
 
-  this.removeEventListener = function (evt, cb) {
+  this.removeEventListener = function (evt, token) {
     if (typeof (evt) == "string")
       evt = this.lookupEvent (evt);
     if (evt == null)
       throw new Error ("invalid event");
 
-    if (event_listeners[evt] != null) {
-      for (var i = 0; i < event_listeners[evt].length; i ++) {
-	if ((event_listeners[evt])[i] == cb) {
-	  event_listeners[evt].remove (i);
-	  break;
-	}
-      }
+    if (event_listeners[evt] != null && event_listeners[evt].length > token) {
+      event_listeners[evt][token] = null;
     }
+  };
+
+  this.emitEvent = function (evt, args) {
+    var list = event_listeners[evt];
+    if (!list)
+      return;
+    notifyListenerList (list, args);
   };
 
   // property change listeners
@@ -104,12 +114,14 @@ function () {
     if (list == null)
       return;
 
-      var copy = [];
-      for (i = 0; i < list.length; i ++)
+    var copy = [];
+    for (i = 0; i < list.length; i ++) {
+      if (list[i])
 	copy.push (list[i]);
+    }
 
-      for (i = 0; i < copy.length; i ++)
-	copy[i] (this, args);
+    for (i = 0; i < copy.length; i ++)
+      copy[i] (this, args);
   };
 
   // the optional arguments are:
