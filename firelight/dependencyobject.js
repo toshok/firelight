@@ -81,7 +81,7 @@ function () {
     }
 
     var logicalChildren = this.getLogicalChildren ();
-    if (logicalChildren /* && logicalChildren instanceof Collection */) {
+    if (logicalChildren && logicalChildren.isSubclass (Collection)) {
       for (var i = 0; i < logicalChildren.count; i ++) {
 	var child = logicalChildren.getItemAt(i);
 	if (child && child.connectHost)
@@ -253,9 +253,7 @@ function () {
       // (default is this.svgPeer)
       var peer = bound_dp.metadata.svgPeer ? bound_dp.metadata.svgPeer : "svgPeer";
       var that = this;
-      // XXX need to figure out a way to do this such that we can remove the listener when the value of DP changes.
       var obj = this.getValue(bound_dp);
-//      console.log ("applying it to " + peer);
 
       var svgAttributeListener = function (sender, args) {
 	if (that["update"+bound_dp.name]) {
