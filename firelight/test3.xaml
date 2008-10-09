@@ -7,14 +7,14 @@
       <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="600" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:05" />
-      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="blue" To="orange" Duration="00:00:05" />
+      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="#a40000" To="rgb(255,169,0)" Duration="00:00:05" />
     </Storyboard>
   </Canvas.Resources>
 
   <Canvas.Background>
     <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-      <GradientStop Offset="0%" Color="red" />
-      <GradientStop x:Name="backcolor1" Offset="100%" Color="blue" />
+        <GradientStop Offset="0%" Color="#2e3436" />
+        <GradientStop x:Name="backcolor1" Offset="100%" Color="#a40000" />
     </LinearGradientBrush>
   </Canvas.Background>
 
@@ -40,6 +40,7 @@
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="2.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="2.0" />
+	      <ColorAnimation Storyboard.TargetName="color1" Storyboard.TargetProperty="Color" From="rgb(255,0,0)" To="rgb(255,165,0)" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>
@@ -48,6 +49,7 @@
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="2.0" To="1.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="2.0" To="1.0" />
+	      <ColorAnimation Storyboard.TargetName="color1" Storyboard.TargetProperty="Color" From="rgb(255,165,0)" To="rgb(255,0,0)" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>

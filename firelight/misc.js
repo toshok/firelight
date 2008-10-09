@@ -93,27 +93,48 @@ function format (fmt) {
   return fmt;
 }
 
+function parse2Hex (str) {
+  var hex = "0123456789abcdef";
+
+  return hex.indexOf (str.charCodeAt (0)) * 16 + hex.indexOf (str.charCodeAt(1));
+}
+
 function parseColor (str)
 {
   var n = (/rgb(a?)\s*\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*(\d+))?\)/.exec(str));
-  if (!n) return null;
+  if (n) {
+    if (n[1] == "a" && !n[5])
+      throw new Error ("rgba colors require an alpha value");
+    else if (n[1] == "" && n[5])
+      throw new Error ("rgb colors don't have an alpha value");
 
-  if (n[1] == "a" && !n[5])
-    throw new Error ("rgba colors require an alpha value");
-  else if (n[1] == "" && n[5])
-    throw new Error ("rgb colors don't have an alpha value");
+    var c = {
+      r: Math.max (Math.min (parseInt (n[2]), 255), 0),
+      g: Math.max (Math.min (parseInt (n[3]), 255), 0),
+      b: Math.max (Math.min (parseInt (n[4]), 255), 0),
+    };
+    if (n[5])
+      c.a = Math.max (Math.min (parseInt (n[5]), 255), 0);
+    else
+      c.a = 255;
+    return c;
+  }
 
-  var c = {
-    r: parseInt (n[2]),
-    g: parseInt (n[3]),
-    b: parseInt (n[4])
-  };
-  if (n[5])
-    c.a = parseInt (n[5]);
-  else
-    c.a = 255;
+  var n = (/#([a-zA-Z0-9]{2,})([a-zA-Z0-9]{2,})([a-zA-Z0-9]{2,})(?:([a-zA-Z0-9]{2,}))/.exec(str));
+  if (n) {
+    var c = {
+      r: parse2Hex (n[2]),
+      g: parse2Hex (n[2]),
+      b: parse2Hex (n[2]),
+    };
+    if (n[5])
+      c.a = parse2Hex (n[5]);
+    else
+      c.a = 255;
+    return c;
+  }
 
-  return c;
+  return null;
 }
 
 function RegisterType (namespace, typeName, parentType, initFunc, prototypeStuff) {
