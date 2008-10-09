@@ -309,7 +309,8 @@ function () {
 	  that["update"+bound_dp.name] ();
 	}
 	else if (that[peer]) {
-	  that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
+	  that[peer].setAttributeNS (bound_dp.metadata.svgAttributeNS || null,
+				     bound_dp.metadata.svgAttribute, args.newValue);
 	}
       };
 
@@ -332,15 +333,31 @@ function () {
       var that = this;
 
       // we assume that it's a primitive type, so we create a binding which is updated when the property is changed.
+      console.log ("adding propertychange listener for " + bound_dp + ", " + bound_dp.metadata.svgAttributeNS + ":" + bound_dp.metadata.svgAttribute);
       this.addPropertyChangeListener(bound_dp,
 				     function (sender, args) {
 				       if (bound_dp.metadata.cssAttribute)
 					 that[peer].style[bound_dp.metadata.cssAttribute] = args.newValue.toString();
-				       else if (bound_dp.metadata.svgAttribute)
-					 that[peer].setAttributeNS (null, bound_dp.metadata.svgAttribute, args.newValue);
+				       else if (bound_dp.metadata.svgAttribute) {
+					   console.log ("setting " + bound_dp.metadata.svgAttributeNS || null + ":" + bound_dp.metadata.svgAttribute);
+					 that[peer].setAttributeNS (bound_dp.metadata.svgAttributeNS || null,
+								    bound_dp.metadata.svgAttribute, args.newValue);
+				       }
 				       else
 					 throw new Error ("not sure what to do with this primitive type thingy here.");
 				     });
+
+      if (this.properties[bound_dp.key]) {
+	if (bound_dp.metadata.cssAttribute)
+	  that[peer].style[bound_dp.metadata.cssAttribute] = this.properties[bound_dp.key].toString();
+	else if (bound_dp.metadata.svgAttribute) {
+	  console.log ("setting " + bound_dp.metadata.svgAttributeNS || null + ":" + bound_dp.metadata.svgAttribute);
+	  that[peer].setAttributeNS (bound_dp.metadata.svgAttributeNS || null,
+				     bound_dp.metadata.svgAttribute, this.properties[bound_dp.key]);
+	}
+	  else
+	      throw new Error ("not sure what to do with this primitive type thingy here.");
+      }
     }
   },
 

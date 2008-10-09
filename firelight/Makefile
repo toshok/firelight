@@ -52,6 +52,8 @@ JS_SOURCES=	consts.js			\
 		canvas.js			\
 		shape.js			\
 		rectangle.js			\
+		image.js			\
+		mediaelement.js			\
 		timeline.js			\
 		timelinecollection.js		\
 		timelinegroup.js		\

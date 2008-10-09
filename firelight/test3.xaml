@@ -19,28 +19,21 @@
   </Canvas.Background>
 
   <!-- children -->
-  <Canvas x:Name="child" Width="50" Height="50">
-    <Canvas.Background>
-      <RadialGradientBrush Center="50%,50%" RadiusX="0.5" RadiusY="0.75">
-        <GradientStop x:Name="color0" Offset="0%" Color="blue" />
-        <GradientStop x:Name="color1" Offset="100%" Color="red" />
-      </RadialGradientBrush>
-    </Canvas.Background>
+  <Image x:Name="child" Width="80" Height="80" Source="britney.jpg">
 
-    <Canvas.RenderTransform>
+    <Image.RenderTransform>
       <TransformGroup>
 	<TranslateTransform x:Name="translate" X="50" Y="50" />
         <ScaleTransform x:Name="scale" />
       </TransformGroup>
-    </Canvas.RenderTransform>
+    </Image.RenderTransform>
 
-    <Canvas.Triggers>
+    <Image.Triggers>
         <EventTrigger RoutedEvent="MouseEnter">
 	  <BeginStoryboard>
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="2.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="2.0" />
-	      <ColorAnimation Storyboard.TargetName="color1" Storyboard.TargetProperty="Color" From="rgb(255,0,0)" To="rgb(255,165,0)" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>
@@ -49,20 +42,11 @@
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="2.0" To="1.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="2.0" To="1.0" />
-	      <ColorAnimation Storyboard.TargetName="color1" Storyboard.TargetProperty="Color" From="rgb(255,165,0)" To="rgb(255,0,0)" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>
-        <EventTrigger RoutedEvent="MouseLeftButtonDown">
-          <Setter TargetName="color0" Property="Color" Value="red" />
-          <Setter TargetName="color1" Property="Color" Value="blue" />
-        </EventTrigger>
-        <EventTrigger RoutedEvent="MouseLeftButtonUp">
-          <Setter TargetName="color0" Property="Color" Value="blue" />
-          <Setter TargetName="color1" Property="Color" Value="red" />
-        </EventTrigger>
-    </Canvas.Triggers>
-  </Canvas>
+    </Image.Triggers>
+  </Image>
 
   <TextBlock x:Name="text" FontSize="10" Canvas.Left="50" Canvas.Top="120" Text="Firelight:  Silverlight/WPF implemented entirely in JavaScript!">
     <TextBlock.Foreground>
