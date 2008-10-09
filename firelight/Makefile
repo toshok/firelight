@@ -17,13 +17,14 @@ JS_SOURCES=	consts.js			\
 		namescope.js			\
 		collection.js			\
 		resourcedictionary.js		\
+		triggeraction.js		\
 		triggeractioncollection.js	\
 		triggerbase.js			\
 		trigger.js			\
 		eventtrigger.js			\
 		triggercollection.js		\
-		transformcollection.js		\
 		transform.js			\
+		transformcollection.js		\
 		rotatetransform.js		\
 		scaletransform.js		\
 		translatetransform.js		\

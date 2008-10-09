@@ -1,5 +1,6 @@
 RegisterType ("System.Windows", "Setter",
-	      DependencyObject, null,
+	      TriggerAction,
+	      null,
 {
   performAction: function (obj) {
     Trace.debug ("i should be setting " + this.targetName + "." + this.property + " = " + this.value);

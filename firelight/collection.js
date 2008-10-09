@@ -26,6 +26,12 @@ function () {
   },
 
   addItem: function (item) {
+    if (this.elementType == Object)
+      /* everything is allowed */;
+    else if (item.isSubclass)
+      if (!item.isSubclass (this.elementType))
+	throw new Error (this + " requires children of type " + this.elementType.typeName);
+
     var index = this.items.length;
 
     var handler = null;

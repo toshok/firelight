@@ -6,6 +6,8 @@ function ()
 },
 
 {
+  elementType: Object,
+
   getLogicalChildren: function () {
     return this;
   },

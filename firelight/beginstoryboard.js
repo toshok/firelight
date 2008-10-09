@@ -1,6 +1,6 @@
 RegisterType ("System.Windows.Media.Animation", // namespace
 	      "BeginStoryboard",                // type name
-	      DependencyObject,                 // parent type
+	      TriggerAction,                    // parent type
 	      null,
 {
   contentProperty: "Storyboard",
