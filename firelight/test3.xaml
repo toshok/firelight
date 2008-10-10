@@ -1,22 +1,14 @@
 <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	x:Name="top" Width="800" Height="500" Canvas.Left="50">
+	x:Name="top" Width="800" Height="500" Canvas.Left="50" Background="#2e3436">
 
   <Canvas.Resources>
     <Storyboard x:Name="demoAnimation">
       <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="500" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:05" />
-<!--      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="#a40000" To="rgb(255,169,0)" Duration="00:00:05" />-->
     </Storyboard>
   </Canvas.Resources>
-
-  <Canvas.Background>
-    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-        <GradientStop Offset="0%" Color="#2e3436" />
-        <GradientStop x:Name="backcolor1" Offset="100%" Color="#a40000" />
-    </LinearGradientBrush>
-  </Canvas.Background>
 
   <!-- children -->
   <Image x:Name="child" Width="80" Height="80" Source="britney.jpg">
@@ -34,7 +26,7 @@
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="3.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="3.0" />
-	      <DoubleAnimation Storyboard.TargetName="blur" Storyboard.TargetProperty="Radius" From="5" To="0.1" />
+	      <DoubleAnimation Storyboard.TargetName="blur" Storyboard.TargetProperty="Radius" From="5" To="0.001" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>
@@ -43,7 +35,7 @@
 	    <Storyboard Duration="0:0:0.1">
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="3.0" To="1.0" />
 	      <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="3.0" To="1.0" />
-	      <DoubleAnimation Storyboard.TargetName="blur" Storyboard.TargetProperty="Radius" From="0.1" To="5" />
+	      <DoubleAnimation Storyboard.TargetName="blur" Storyboard.TargetProperty="Radius" From="0.001" To="5" />
 	    </Storyboard>
 	  </BeginStoryboard>
         </EventTrigger>
