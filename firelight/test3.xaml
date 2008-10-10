@@ -7,7 +7,7 @@
       <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" From="0" To="360" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X" From="50" To="500" Duration="00:00:05" />
       <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:05" />
-      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="#a40000" To="rgb(255,169,0)" Duration="00:00:05" />
+<!--      <ColorAnimation Storyboard.TargetName="backcolor1" Storyboard.TargetProperty="Color" From="#a40000" To="rgb(255,169,0)" Duration="00:00:05" />-->
     </Storyboard>
   </Canvas.Resources>
 
