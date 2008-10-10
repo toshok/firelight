@@ -14,6 +14,9 @@ JS_SOURCES=	consts.js			\
 		eventmanager.js			\
 		dependencyproperty.js		\
 		dependencyobject.js		\
+		bitmapeffect.js			\
+		blurbitmapeffect.js		\
+		dropshadowbitmapeffect.js	\
 		namescope.js			\
 		collection.js			\
 		resourcedictionary.js		\
