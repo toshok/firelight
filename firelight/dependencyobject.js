@@ -336,8 +336,10 @@ function () {
         if (bound_dp.metadata.cssAttribute)
 	  that[peer].style[bound_dp.metadata.cssAttribute] = value.toString();
 	else if (bound_dp.metadata.svgAttribute) {
-	  that[peer].setAttributeNS (bound_dp.metadata.svgAttributeNS || null,
-				     bound_dp.metadata.svgAttribute, value);
+	  if (that[peer]) {
+	    that[peer].setAttributeNS (bound_dp.metadata.svgAttributeNS || null,
+				       bound_dp.metadata.svgAttribute, value);
+	  }
 	}
 	else
 	  throw new Error ("not sure what to do with this primitive type thingy here.");
