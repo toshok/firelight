@@ -89,5 +89,6 @@ XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Contro
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Documents");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media.Animation");
+XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Media.Effects");
 XamlTypeResolver.addNamespaceMap (FirelightConsts.XAMLns, "System.Windows.Shapes");
 // XXX more here I'm sure

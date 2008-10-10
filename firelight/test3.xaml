@@ -62,6 +62,10 @@
         <RotateTransform x:Name="rotate" Angle="0" CenterX="150" CenterY="10" />
       </TransformGroup>
     </TextBlock.RenderTransform>
+
+    <Rectangle.BitmapEffect>
+	<DropShadowBitmapEffect ShadowDepth="5"/>
+    </Rectangle.BitmapEffect>
   </TextBlock>
 
   <Rectangle x:Name="rect" Opacity="0" Canvas.Left="50" Canvas.Top="180" Width="100" Height="50" RadiusX="5" RadiusY="3" Fill="yellow" Stroke="black">
@@ -70,6 +74,10 @@
         <Setter TargetName="rect" Property="Fill" Value="red" />
       </Trigger>
     </Rectangle.Triggers>
+
+    <Rectangle.BitmapEffect>
+	<DropShadowBitmapEffect ShadowDepth="10"/>
+    </Rectangle.BitmapEffect>
   </Rectangle>
 
 </Canvas>

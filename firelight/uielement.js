@@ -59,6 +59,9 @@ DependencyProperties.register (UIElement, "Opacity",
 			       { defaultValue: 1.0,
 				 affectsRender: true,
 				 cssAttribute: "opacity" });
+DependencyProperties.register (UIElement, "BitmapEffect",
+			       { propertyType: BitmapEffect,
+				 svgAttribute: "filter" });
 DependencyProperties.register (UIElement, "Tag");
 DependencyProperties.register (UIElement, "RenderTransform",
 			       { defaultValue: function () { return new TransformGroup(); },
